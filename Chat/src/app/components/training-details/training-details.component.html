@@ -1,0 +1,20 @@
+
+<div *ngIf="!(training | async)" class="parent-nothing">
+        <h1 class="nothing"> Nothing to See Here. </h1>
+    </div>
+<div class="training-details" [class.blur-me]="!(training | async)">
+    <div class="row p-4 sticky-div">
+        <i class="ml-2 far fa-comments fa-2x"></i>
+        <h4 class="ml-2 mt-1 mr-auto"> {{(training | async)?.name}}</h4>
+        <div *ngIf="!(isSessionActive | async)">
+            <strong class="text-warning mt-3"> You are not connected to this session.</strong>
+            <button type="button" mat-icon-button matTooltip="Join Session" (click)="joinSession()">
+                <mat-icon>meeting_room</mat-icon>
+            </button>
+        </div>
+        <button *ngIf="isSessionActive | async" type="button" (click)="leaveSession()" mat-icon-button matTooltip="Leave Session">
+                <mat-icon>no_meeting_room</mat-icon>
+        </button>
+    </div>
+    <app-session [class.blur-me]="!(isSessionActive | async)" ></app-session>
+</div>

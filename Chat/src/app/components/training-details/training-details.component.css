@@ -1,0 +1,31 @@
+.training-details {
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.sticky-div {
+    position: -webkit-sticky; /* Required for Safari */
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 999;
+}
+
+.blur-me {
+    filter: blur(4px);
+}
+
+.nothing{
+    position: absolute;
+    top: 17rem;
+    left: 4rem;
+    z-index: 1000;
+    color: white;
+}
+
+.parent-nothing {
+    position: relative; 
+    width: 0; 
+    height: 0
+}

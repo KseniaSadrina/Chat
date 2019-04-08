@@ -1,0 +1,21 @@
+.btn-transparent {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.trainings-heading {
+    position: -webkit-sticky; /* Required for Safari */
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 999;
+}
+
+.selected {
+    background: black;
+    color: white;
+}

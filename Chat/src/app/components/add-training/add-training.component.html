@@ -1,0 +1,23 @@
+<div class="custom-modal">
+  <h1 mat-dialog-title> Start New Training </h1>
+  <form [formGroup]="newTrainingForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content>
+      <mat-form-field class="mr-2">
+          <input matInput placeholder="Training Name" formControlName="name">
+      </mat-form-field>
+      <mat-form-field class="mr-2">
+        <mat-select placeholder="Scenario" formControlName="scenario" [compareWith]="compareFn">
+            <mat-option [value]="scenario" *ngFor="let scenario of scenarios | async">{{scenario?.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="scenario-desc">
+        <small class="mb-2"> Scenario Description: </small>
+        <p>{{(scenarioDescription | async )}}</p>
+      </div>
+    </div>
+    <div mat-dialog-actions class="d-flex flex-row-reverse">
+      <button mat-button type="button" (click)="onNoClick()">Cancel</button>
+      <button mat-button type="submit" [disabled]="!newTrainingForm.valid" cdkFocusInitial>Start</button>
+    </div>
+  </form>
+</div>

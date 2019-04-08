@@ -1,0 +1,17 @@
+C:\Users\Ksenya\Source\Repos\Chat\Chat\bin\Debug\netcoreapp2.2\Chat.deps.json
+C:\Users\Ksenya\Source\Repos\Chat\Chat\bin\Debug\netcoreapp2.2\Chat.runtimeconfig.json
+C:\Users\Ksenya\Source\Repos\Chat\Chat\bin\Debug\netcoreapp2.2\Chat.runtimeconfig.dev.json
+C:\Users\Ksenya\Source\Repos\Chat\Chat\bin\Debug\netcoreapp2.2\Chat.dll
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.csprojAssemblyReference.cache
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.csproj.CoreCompileInputs.cache
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.RazorAssemblyInfo.cache
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.RazorAssemblyInfo.cs
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.AssemblyInfoInputs.cache
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.AssemblyInfo.cs
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.RazorTargetAssemblyInfo.cache
+C:\Users\Ksenya\Source\Repos\Chat\Chat\bin\Debug\netcoreapp2.2\Chat.pdb
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.dll
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.pdb
+C:\Users\Ksenya\Source\Repos\Chat\Chat\bin\Debug\netcoreapp2.2\Models.dll
+C:\Users\Ksenya\Source\Repos\Chat\Chat\bin\Debug\netcoreapp2.2\Models.pdb
+C:\Users\Ksenya\Source\Repos\Chat\Chat\obj\Debug\netcoreapp2.2\Chat.csproj.CopyComplete

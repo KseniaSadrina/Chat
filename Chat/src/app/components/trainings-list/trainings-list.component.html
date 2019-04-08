@@ -1,0 +1,24 @@
+<div>
+  <div class="trainings-heading p-3">
+    <div class="row mr-2 ml-2">
+      <h3 class="mr-auto mt-2">{{title}}</h3>
+      <button mat-type="button" mat-icon-button (click)="openDialog()"  matTooltip="Add New Training" aria-label="Button that displays a tooltip when focused or hovered over">
+        <mat-icon class="mat-icon-rtl-mirror"> add_box</mat-icon>
+      </button>
+    </div>
+  </div>
+  <ul class="list-group">
+      <li *ngFor="let training of trainings | async">
+        <a [routerLink]="['/training', training.id]" 
+        class="list-group-item list-group-item-action flex-column align-items-start"
+        [class.selected]="training.id === selectedId"> 
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ training.name }}</h5> 
+            <!-- <span class="badge badge-primary badge-pill pt-2" title="State">{{ training.state }}</span> -->
+          </div>
+          <p>{{training.scenario.description}}</p>
+          <small>{{training.scenario.name}}</small>
+        </a>
+      </li>
+    </ul>
+</div>
