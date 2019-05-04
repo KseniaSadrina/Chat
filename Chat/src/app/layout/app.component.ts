@@ -9,15 +9,15 @@ import { SessionsService } from './../services/sessions.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
+
   title = 'chat-client';
   public authentication = true;
   constructor() { }
-  
-  
+
+
   ngOnInit() {
 
-  } 
+  }
 
 
 }

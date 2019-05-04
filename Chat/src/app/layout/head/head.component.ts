@@ -8,9 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class HeadComponent implements OnInit {
 
   constructor() { }
-  
+
   title = 'Cyber Training ChatRoom';
-  
+
   ngOnInit() {
   }
 

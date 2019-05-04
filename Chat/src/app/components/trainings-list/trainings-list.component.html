@@ -9,12 +9,12 @@
   </div>
   <ul class="list-group">
       <li *ngFor="let training of trainings | async">
-        <a [routerLink]="['/training', training.id]" 
+        <a [routerLink]="['/trainings', training.id]"
         class="list-group-item list-group-item-action flex-column align-items-start"
-        [class.selected]="training.id === selectedId"> 
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ training.name }}</h5> 
-            <!-- <span class="badge badge-primary badge-pill pt-2" title="State">{{ training.state }}</span> -->
+        [class.selected]="training?.id === (selectedId | async)">
+          <div class="d-flex w-100 justify-content-between mb-2">
+            <h5 class="mb-1">{{ training.name }}</h5>
+            <span class="badge badge-danger badge-pill pt-2" title="Unread Messages">{{ (user | async).unreadMessages[training.name] }}</span>
           </div>
           <p>{{training.scenario.description}}</p>
           <small>{{training.scenario.name}}</small>

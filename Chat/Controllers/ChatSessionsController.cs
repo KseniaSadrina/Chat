@@ -21,15 +21,6 @@ namespace Chat.Controllers
     }
 
     // GET: api/ChatSessions
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ChatSession>>> GetChannels()
-    {
-      var result = await _sessionsService.GetAllAsync();
-      return new JsonResult(result);
-    }
-
-
-    // GET: api/ChatSessions
     [HttpGet("{id}")]
     public async Task<ActionResult<ChatSession>> GetChatSession(int id)
     {
@@ -37,22 +28,21 @@ namespace Chat.Controllers
       return new JsonResult(result);
     }
 
-    // GET: api/ChatSessions?userId=1
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ChatSession>>> GetUserSessions(int userId)
-    {
-      // at the moment we are retrieving only one session in such case
-      var result = await _sessionsService.GetUserSessions(userId);
-      Console.WriteLine($"result of getting sessions: {result}");
-      return new JsonResult(result);
-    }
-
     // GET: api/ChatSessions?userId=1&trainingId=2
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ChatSession>>> GetUserSessionsByTrainingId(int userId, int trainingId)
     {
-      // at the moment we are retrieving only one session in such case
-      var result = await _sessionsService.GetUserSessions(userId);
+      IEnumerable<ChatSession> result;
+      if (userId <= 0 && trainingId <= 0)
+        result = await _sessionsService.GetAllAsync();
+
+      else if (userId > 0 && trainingId > 0)
+        // at the moment we are retrieving only one session in such case
+        result = await _sessionsService.GetUserSessions(userId);
+
+      else
+        result = await _sessionsService.GetUserSessions(userId);
+
       return new JsonResult(result);
     }
 

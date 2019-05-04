@@ -12,17 +12,17 @@ export class ScenariosService {
 
   private scenarios = new BehaviorSubject<Scenario[]>([]);
   public scenarios$ = this.scenarios.asObservable();
-  scenarioURL = "api/scenarios";
+  scenarioURL = 'api/scenarios';
 
   subscription: Subscription;
-  constructor(private httpService: HttpClient) { 
+  constructor(private httpService: HttpClient) {
     this.subscription = this.getScenariosFromServer().subscribe(res => {
       this.scenarios.next(res);
       this.subscription.unsubscribe();
     });
   }
 
-  private getScenariosFromServer() : Observable<Scenario[]> {
+  private getScenariosFromServer(): Observable<Scenario[]> {
     return this.httpService.get<Scenario[]>(this.scenarioURL);
   }
 

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TrainingsService } from 'src/app/services/trainings.service';
-import { Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { Observable, Subscription, BehaviorSubject,  } from 'rxjs';
 import { Training } from 'src/app/models/Training';
-import { switchMap, map } from 'rxjs/operators';
+import { combineLatest, map, switchMap, merge } from 'rxjs/operators';
 import { SessionsService } from 'src/app/services/sessions.service';
 import { ChatSession } from 'src/app/models/chatSession';
 
@@ -12,57 +12,24 @@ import { ChatSession } from 'src/app/models/chatSession';
   templateUrl: './training-details.component.html',
   styleUrls: ['./training-details.component.css']
 })
-export class TrainingDetailsComponent implements OnInit, OnDestroy {
-  
+export class TrainingDetailsComponent implements OnInit {
+
   training: Observable<Training>;
-  isSessionActive = new BehaviorSubject<boolean>(false);
-  subscriptions: Subscription[] = [];
+  session: Observable<ChatSession>;
 
+  constructor(private sessions: SessionsService, private trainings: TrainingsService) { }
 
-  constructor(
-    private route: ActivatedRoute,
-    private service: TrainingsService,
-    private sessions: SessionsService
-    ) { }
-    
-    ngOnInit() {
-      this.training = this.route.paramMap.pipe(
-        switchMap((params: ParamMap) =>
-        this.service.getTraining(params.get('id')))
-        );
+  ngOnInit() {
+    this.training = this.trainings.currentTraining$;
+    this.session = this.sessions.currentSession$;
+  }
 
-        let sub = this.sessions.currentSession$.pipe(
-          map((activeSession: ChatSession) => {
-            this.isSessionActive.next(activeSession !== null && activeSession !== undefined);
-          })
-        ).subscribe();
-        
-        this.subscriptions.push(this.training.subscribe());
-        this.subscriptions.push(sub);
-      }
-    
-    ngOnDestroy(): void {
-      this.subscriptions.forEach(item => item.unsubscribe());
-    }
+  public joinSession(trainingId: number) {
+    this.sessions.joinToSession(trainingId);
+  }
 
-    public joinSession() {
-      
-      let sub = this.training.pipe(
-        map(training => this.sessions.joinSession(training.id))
-      ).subscribe( res => {
-        if (sub) sub.unsubscribe();
-      });
-    }
-
-    public leaveSession() {
-      let sub = this.sessions.currentSession$.pipe(
-        map((session: ChatSession) => {
-          if (!session) return;
-          this.sessions.leaveSession(session.name);
-        })
-      ).subscribe( res => {
-        if (sub) sub.unsubscribe();
-      });
+  public leaveSession(sessionName: string) {
+    this.sessions.leaveSession(sessionName);
   }
 
 }

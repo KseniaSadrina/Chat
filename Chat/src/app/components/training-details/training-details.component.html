@@ -1,20 +1,20 @@
 
 <div *ngIf="!(training | async)" class="parent-nothing">
         <h1 class="nothing"> Nothing to See Here. </h1>
-    </div>
+</div>
 <div class="training-details" [class.blur-me]="!(training | async)">
-    <div class="row p-4 sticky-div">
+    <div class="row pl-4 pt-4 pb-3 pr-3 sticky-div">
         <i class="ml-2 far fa-comments fa-2x"></i>
-        <h4 class="ml-2 mt-1 mr-auto"> {{(training | async)?.name}}</h4>
-        <div *ngIf="!(isSessionActive | async)">
+        <h4 class="ml-2 mt-1 mr-auto"> {{(training| async)?.name}}</h4>
+        <div *ngIf="!(session | async) && (training | async) as training1">
             <strong class="text-warning mt-3"> You are not connected to this session.</strong>
-            <button type="button" mat-icon-button matTooltip="Join Session" (click)="joinSession()">
+            <button type="button" mat-icon-button matTooltip="Join Session" (click)="joinSession(training1.id)">
                 <mat-icon>meeting_room</mat-icon>
             </button>
         </div>
-        <button *ngIf="isSessionActive | async" type="button" (click)="leaveSession()" mat-icon-button matTooltip="Leave Session">
+        <button *ngIf="(session | async) as session1" type="button" (click)="leaveSession(session1.name)" mat-icon-button matTooltip="Leave Session">
                 <mat-icon>no_meeting_room</mat-icon>
         </button>
     </div>
-    <app-session [class.blur-me]="!(isSessionActive | async)" ></app-session>
+    <app-session [class.blur-me]="!(session | async)" ></app-session>
 </div>

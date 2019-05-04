@@ -7,4 +7,5 @@ export class User {
     fullName: string;
     userName: string;
     type: UserType;
+    unreadMessages: { [sessionName: string]: number };
 }

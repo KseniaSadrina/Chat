@@ -25,7 +25,7 @@ namespace Models
 		[JsonProperty("type")]
 		public ChannelType Type { get; set; }
 
-		[JsonProperty("training")]
+		[JsonProperty("trainingId")]
 		[ForeignKey(nameof(Training))]
 		public int TrainingId { get; set; }
 

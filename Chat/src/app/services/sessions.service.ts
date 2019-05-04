@@ -1,65 +1,75 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, zip, throwError, combineLatest } from 'rxjs';
+import { Injectable, ɵConsole } from '@angular/core';
+import { Observable, BehaviorSubject, zip, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Message } from '../models/Message';
 import { ServiceBase } from './serviceBase';
 import { ChatSession } from '../models/chatSession';
-import { map, catchError } from 'rxjs/operators';
+import { map, combineLatest } from 'rxjs/operators';
 import { ME } from '../helpers/mocks';
 import { User } from '../models/User';
 import { ActivatedRoute } from '@angular/router';
+import { TrainingsService } from './trainings.service';
+import { Session } from 'protractor';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class SessionsService extends ServiceBase {
-  
+
   protected hubType = 'message';
-  sessionURL = 'api/chatSession';
+  sessionURL = 'api/chatSessions';
 
-  private currentUser: User = ME;
-  private sessions = new BehaviorSubject<{ [sessionName: string] : ChatSession }>({});
+  private currentUser: BehaviorSubject<User>;
+
   private currentSession = new BehaviorSubject<ChatSession>(null);
-  
   public currentSession$ = this.currentSession.asObservable();
+
+  private sessions = new BehaviorSubject<ChatSession[]>([]);
   public sessions$ = this.sessions.asObservable();
-  public selected$ = new BehaviorSubject<number>(-1);
-  
-  constructor(private httpService: HttpClient) {
+
+  constructor(private httpService: HttpClient,
+              private trainings: TrainingsService,
+              private authService: AuthService) {
     super();
+    this.currentUser = this.authService.currentUser;
     this.initHub();
-    
-    // retrieve existing messages from server and unsubscribe
-    let sub = this.getUserSessionsFromServer().subscribe( res => {
-      res.forEach(item => this.joinSession(item.trainingId));
-      sub.unsubscribe();
+
+    // retrieve existing sessions from the server and re-join to them
+    this.getUserSessionsFromServer().subscribe( res => {
+      if (!res) { return; }
+      res.forEach(item => this.joinToSession(item.trainingId));
     });
 
-    this.sessions.subscribe( (sessions: { [ name : string ] : ChatSession}) => {
-      this.updateSelected(sessions);
-    });
-
-    this.selected$.subscribe(selected => {
-      let sessions = this.sessions.getValue();
-      this.updateSelected(sessions);
-    });
+    this.sessions.pipe(
+      combineLatest(this.trainings.currentTraining$, (sessions, training) => {
+        // if the training is not null and the user has already joined the session in the past, switch the selected session
+        if (training) {
+          const session = sessions.find(s => s.trainingId === training.id);
+          this.currentSession.next(session);
+        }
+      })
+    ).subscribe();
   }
 
   // retrieves all the sessions of the user from the server by user id
   private getUserSessionsFromServer(): Observable<ChatSession[]> {
-    let fullURL = this.sessionURL + "?userId=" + this.currentUser.id;
+    const user = this.currentUser.getValue();
+    if (!user) { return null; }
+    const fullURL = this.sessionURL + '?userId=' + user.id;
     return this.httpService.get<ChatSession[]>(fullURL);
   }
 
   // retrieves all the sessions of the user from the server by user id
   private getSessionByTrainingIdFromServer(trainingId: number): Observable<ChatSession> {
-    let fullURL = this.sessionURL + "?userId=" + this.currentUser.id + "&trainingId=" + trainingId;
+    if (!this.currentUser.getValue()) { return null; }
+    const fullURL = this.sessionURL + '?userId=' + this.currentUser.getValue().id + '&trainingId=' + trainingId;
     return this.httpService.get<ChatSession>(fullURL);
   }
 
   public sendMessage(message: Message) {
-    // send message 
+    // send message
     if (this.hubConnection) {
       message.sessionName = this.currentSession.getValue().name;
       this.hubConnection.invoke('SendToAll', message);
@@ -78,47 +88,49 @@ export class SessionsService extends ServiceBase {
 
       // receive new notifications about group activity
       this.hubConnection.on('groupJoin', (session: ChatSession) => {
-        if (!session) return;
-        let sessions = this.sessions.getValue();
-        sessions[session.name] = session;
+        if (!session) { return; }
+        const sessions = this.sessions.getValue();
+        sessions.push(session);
         this.sessions.next(sessions);
       });
 
       this.hubConnection.on('groupLeave', (groupName: string) => {
-          let sessions = this.sessions.getValue();
-          delete sessions[groupName];
+          const sessions = this.sessions.getValue();
+          const indx = sessions.findIndex(s => s.name === groupName);
+          sessions.splice(indx);
           this.sessions.next(sessions);
       });
 
       // receive new messages
       this.hubConnection.on('message', (message: Message) => {
-        if (!message) return;
-        let sessions = this.sessions.getValue();
-        let session = sessions[message.sessionName];
-        if(!session.messages) session.messages = [];
-        session.messages.push(message);
-        sessions[message.sessionName] = session;
+        console.log(message);
+        if (!message) { return; }
+        // Get all the session to which the new message belongs
+        const sessions = this.sessions.getValue();
+        const sessionIndx = sessions.findIndex(s => s.name === message.sessionName);
+        // Get the current session
+        const currentSession = this.currentSession.getValue();
+        // in case the sender is not me and this is not an open session, update the number of unread messages
+        // TBD
+        // Update the messages of the current session
+        if (!sessions[sessionIndx].messages) { sessions[sessionIndx].messages = []; }
+        sessions[sessionIndx].messages.push(message);
         this.sessions.next(sessions);
       });
     }
   }
 
-  public joinSession(trainingId: number) {
-    if (this.hubConnection) {
-      this.hubConnection.invoke('AddToSession', trainingId, this.currentUser.id);
+  public joinToSession(trainingId: number) {
+    const currentUser = this.currentUser.getValue();
+    if (this.hubConnection && currentUser) {
+      this.hubConnection.invoke('AddToSession', trainingId, currentUser.id);
     }
   }
 
   public leaveSession(sessionName: string) {
-    if (this.hubConnection) {
-      this.hubConnection.invoke('RemoveFromSession', sessionName, this.currentUser.id);
+    const currentUser = this.currentUser.getValue();
+    if (this.hubConnection && currentUser) {
+      this.hubConnection.invoke('RemoveFromSession', sessionName, currentUser.id);
     }
   }
-
-  updateSelected(sessions: {[name: string] : ChatSession}) {
-    let curr = this.selected$.getValue();
-    let selectedItem = Object.keys(sessions).find(item => sessions[item].id === curr);
-    this.currentSession.next(sessions[selectedItem]);
-  }
-
 }

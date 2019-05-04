@@ -1,14 +1,14 @@
 
 <div class="session-wrapper" [class.blur-me]="!(currentSession | async)">
     <div class="messages">
-        <div *ngIf="(messages | async)?.length > 0">
+        <div *ngIf="(messages | async) && (messages | async)?.length > 0">
             <ul *ngFor="let message of messages | async; let i = index">
                 <li>
-                    <div class="message p-3"  [class.my-message]="(currentUser$ | async) === message.sender.id">
+                    <div class="message p-3"  [class.my-message]="(currentUser | async) === message.sender.id">
                         <div class="message-header">
                             <i *ngIf="message?.sender.type != 1" class="fas fa-user-secret"></i>
                             <i *ngIf="message?.sender.type == 1" class="fas fa-robot"></i>
-                            <small> {{message.sender}}:</small> 
+                            <small> {{message.sender}}:</small>
                         </div>
                         <p class="mt-1 mb-1">{{message.text}}</p>
                         <small class="text-muted"> {{message.timestamp.toLocaleString()}}</small>
@@ -16,14 +16,14 @@
                 </li>
             </ul>
         </div>
-        <div *ngIf="(messages | async)?.length <= 0" >
+        <div *ngIf="(!(messages | async) || (messages | async)?.length <= 0)" >
             <span>No messages here..</span>
             <i class="fas fa-frown-open ml-2"></i>
         </div>
     </div>
-    
+
     <div class="form-group row sticky-div text-area p-3">
-        <textarea class="form-control col-11 ml-4" placeholder="Your Message.." rows="2" [formControl]="message"></textarea>
+        <textarea class="form-control message-text-box ml-4" placeholder="Your Message.." rows="2" [formControl]="message" (keydown.enter)="sendMessage();false"></textarea>
         <button class="mt-4" mat-icon-button mat-type="button" (click)="sendMessage()" [disabled]="!message.valid" matTooltip="Send">
             <mat-icon class="mat-icon-rtl-mirror">send</mat-icon>
         </button>
