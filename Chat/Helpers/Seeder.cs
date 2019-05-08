@@ -1,3 +1,4 @@
+using Chat.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Models;
@@ -35,7 +36,7 @@ namespace Chat.Helpers
       foreach (var user in usersToRoles.Keys)
       {
         // check if this user isn't already exist
-        if (userManager.FindByNameAsync(user?.UserName) == null)
+        if (userManager.FindByNameAsync(user?.UserName).Result == null)
         {
           logger.LogDebug($"Seeding User {user?.UserName}.");
           await userManager.CreateAsync(user);
@@ -60,7 +61,7 @@ namespace Chat.Helpers
       {
         var roleName = role.ToString();
         logger.LogDebug($"Seeding Role {roleName}");
-        if (roleManager.FindByNameAsync(roleName) == null)
+        if (roleManager.FindByNameAsync(roleName).Result == null)
           await roleManager.CreateAsync(new Role { Name = roleName });
       }
     }

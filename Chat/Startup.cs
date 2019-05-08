@@ -59,7 +59,12 @@ namespace Chat
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public async void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<User> userManager, RoleManager<Role> roleManager, ILogger<Startup> logger)
+    public async void Configure(IApplicationBuilder app,
+      IHostingEnvironment env,
+      UserManager<User> userManager,
+      RoleManager<Role> roleManager,
+      ILogger<Startup> logger,
+      ChatContext dbContext)
 		{
 			app.Use(async (context, next) => {
 				await next();
