@@ -10,7 +10,7 @@ import { User } from '../models/User';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingsService } from './trainings.service';
 import { Session } from 'protractor';
-import { AuthService } from './auth.service';
+import { CustomAuthService } from './custom-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class SessionsService extends ServiceBase {
 
   constructor(private httpService: HttpClient,
               private trainings: TrainingsService,
-              private authService: AuthService) {
+              private authService: CustomAuthService) {
     super();
     this.currentUser = this.authService.currentUser;
     this.initHub();
@@ -71,7 +71,9 @@ export class SessionsService extends ServiceBase {
   public sendMessage(message: Message) {
     // send message
     if (this.hubConnection) {
-      message.sessionName = this.currentSession.getValue().name;
+      const session = this.currentSession.getValue();
+      message.sessionName = session.name;
+      message.ChatSessionId = session.id;
       this.hubConnection.invoke('SendToAll', message);
     }
   }

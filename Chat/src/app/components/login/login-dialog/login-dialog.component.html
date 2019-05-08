@@ -21,8 +21,15 @@
 
     </mat-dialog-content>
 
-    <mat-dialog-actions>
-      <button mat-button type="button">Register</button>
-      <button mat-raised-button type="submit" [disabled]="!loginForm.valid">Login</button>
-    </mat-dialog-actions>
+    <div class="mt-2">
+      <div class="d-flex justify-content-center">
+        <div class="mr-2">
+          <button mat-raised-button type="button mr-2 btn btn-block">Register</button>
+        </div>
+        <div class="mr-2">
+            <button mat-raised-button type="submit" [disabled]="!loginForm.valid">Login</button>
+        </div>
+      </div>
+      <div matTooltip="Sign in with your google account." class="g-signin2 mt-2 centered" data-onsuccess="onSignIn" ></div>
+    </div>
   </div>

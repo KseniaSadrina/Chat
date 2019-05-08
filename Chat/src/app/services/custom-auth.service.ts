@@ -4,11 +4,12 @@ import { User } from '../models/User';
 import { ME } from '../helpers/mocks';
 import { Router, RouterEvent } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
-
+import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
+import { HttpClient } from '@aspnet/signalr';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class CustomAuthService {
 
   loginUrl = '/home/login';
 
@@ -36,4 +37,18 @@ export class AuthService {
 
   }
 
+  public googleLogin(token: string) {
+
+  }
+
+  public facebookLogin(token: string) {
+
+  }
+
+  public linkedInLogin(token: string) {
+
+  }
+  sendToRestApiMethod(token: string): void {
+    // this.http.post();
+  }
 }

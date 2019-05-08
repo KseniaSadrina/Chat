@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dialogRef = this.dialog.open(LoginDialogComponent, { closeOnNavigation: true, disableClose: true } );
     this.isOpen = true;
     this.dialogRefSub =  this.dialogRef.afterClosed().subscribe((() => {
-      this.router.navigate(['../'], { relativeTo: this.route });
       this.isOpen = false;
     }).bind(this));
 

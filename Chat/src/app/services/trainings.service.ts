@@ -6,7 +6,7 @@ import { map, filter, combineLatest } from 'rxjs/operators';
 import { ServiceBase } from './serviceBase';
 import { User } from '../models/User';
 import { ME } from '../helpers/mocks';
-import { Router, RoutesRecognized } from '@angular/router';
+import { Router, RoutesRecognized, ActivatedRoute, NavigationStart, NavigationEnd, ActivationEnd } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -43,16 +43,9 @@ export class TrainingsService extends ServiceBase {
 
     // get current selected training index
     this.router.events.pipe(
-        filter(e => e instanceof RoutesRecognized),
-        map(e => {
-          console.log(e);
-          return (e as RoutesRecognized).state.root.firstChild.params;
-
-        }),
-        map(params => {
-          this.currentIndex.next(Number(params.id));
-          console.log(params.id);
-        } )
+        filter(e => e instanceof ActivationEnd && !e.snapshot.firstChild),
+        map((e: ActivationEnd ) => e.snapshot.params),
+        map(params => this.currentIndex.next(Number(params.id)))
     ).subscribe();
 
     // update the selected training when the trainings change or the selected index changes

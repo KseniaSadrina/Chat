@@ -7,7 +7,7 @@ import { ChatSession } from 'src/app/models/chatSession';
 import { map } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ME } from 'src/app/helpers/mocks';
-import { AuthService } from 'src/app/services/auth.service';
+import { CustomAuthService } from 'src/app/services/custom-auth.service';
 import { User } from 'src/app/models/User';
 
 @Component({
@@ -19,7 +19,7 @@ export class SessionComponent implements OnInit {
 
 
   constructor(private sessionsService: SessionsService,
-              private auth: AuthService,
+              private auth: CustomAuthService,
               private route: ActivatedRoute,
               private router: Router) { }
 

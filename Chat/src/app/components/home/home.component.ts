@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { CustomAuthService } from 'src/app/services/custom-auth.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: CustomAuthService) { }
   isLoggingIn: Observable<boolean>;
 
   ngOnInit() {

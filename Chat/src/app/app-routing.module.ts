@@ -9,7 +9,7 @@ import { TrainingsComponent } from './components/trainings/trainings.component';
 import { AddTrainingComponent } from './components/trainings/add-training/add-training.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home/trainings/1', pathMatch: 'full' },
+  { path: '', redirectTo: 'home/trainings', pathMatch: 'full' },
   { path: 'home',
     component: HomeComponent,
     children: [
@@ -19,14 +19,6 @@ const routes: Routes = [
           {
             path: ':id',
             component: TrainingDetailsComponent
-          },
-          {
-            path: 'add-training',
-            component: AddTrainingComponent
-          },
-          {
-            path: ':id/add-training',
-            redirectTo: 'add-training'
           }
         ]}
     ]

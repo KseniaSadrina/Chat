@@ -19,6 +19,25 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { HomeComponent } from './components/home/home.component';
 import { TrainingsComponent } from './components/trainings/trainings.component';
 import { LoginDialogComponent } from './components/login/login-dialog/login-dialog.component';
+import { SocialLoginModule,
+         AuthServiceConfig,
+         GoogleLoginProvider, LinkedInLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
+
+
+const config = new AuthServiceConfig([
+  {
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider('Google-OAuth-Client-Id')
+  },
+  {
+    id: FacebookLoginProvider.PROVIDER_ID,
+    provider: new FacebookLoginProvider('Facebook-App-Id')
+  },
+  {
+    id: LinkedInLoginProvider.PROVIDER_ID,
+    provider: new LinkedInLoginProvider('LinkedIn-client-Id', false, 'en_US')
+  }
+]);
 
 @NgModule({
   declarations: [
@@ -42,9 +61,10 @@ import { LoginDialogComponent } from './components/login/login-dialog/login-dial
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    GrowlModule
+    GrowlModule,
+    SocialLoginModule
   ],
-  providers: [],
+  providers: [ { provide: AuthServiceConfig, useFactory: config } ],
   bootstrap: [AppComponent],
   entryComponents: [AddTrainingComponent, LoginDialogComponent]
 })

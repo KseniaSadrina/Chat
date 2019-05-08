@@ -1,11 +1,8 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
+import { CustomAuthService } from 'src/app/services/custom-auth.service';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { User } from 'src/app/models/User';
 import { map, filter } from 'rxjs/operators';
-import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material';
-import { LoginComponent } from 'src/app/components/login/login.component';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-head',
@@ -20,7 +17,7 @@ export class HeadComponent implements OnInit {
   isLoggingIn: Observable<boolean>;
 
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: CustomAuthService) { }
 
   ngOnInit() {
     this.isLoggedIn = this.authService.isLoggedIn$;
