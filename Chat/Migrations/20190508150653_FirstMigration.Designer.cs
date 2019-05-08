@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chat.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20190506100203_FirstMigration")]
+    [Migration("20190508150653_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,7 +120,7 @@ namespace Chat.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("ChatSessionId");
+                    b.Property<int>("ChatSessionId");
 
                     b.Property<string>("Sender");
 
@@ -330,7 +330,8 @@ namespace Chat.Migrations
                 {
                     b.HasOne("Models.ChatSession")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatSessionId");
+                        .HasForeignKey("ChatSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Models.SessionUser", b =>

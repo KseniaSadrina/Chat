@@ -118,7 +118,7 @@ namespace Chat.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("ChatSessionId");
+                    b.Property<int>("ChatSessionId");
 
                     b.Property<string>("Sender");
 
@@ -328,7 +328,8 @@ namespace Chat.Migrations
                 {
                     b.HasOne("Models.ChatSession")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatSessionId");
+                        .HasForeignKey("ChatSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Models.SessionUser", b =>

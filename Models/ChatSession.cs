@@ -32,7 +32,8 @@ namespace Models
 		// many to many relationship mapped by a joined table
 		public virtual ICollection<SessionUser> Users { get; set; }
 
-		public virtual ICollection<Message> Messages { get; set; }
+        [JsonProperty("messages")]
+        public virtual ICollection<Message> Messages { get; set; }
 
 	}
 }

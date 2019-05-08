@@ -21,7 +21,11 @@ namespace Models
 		[JsonProperty("sessionName")]
 		public string SessionName { get; set; }
 
-		[JsonProperty("timestamp")]
+        [JsonProperty("chatSessionId")]
+        [ForeignKey(nameof(ChatSession))]
+        public int ChatSessionId { get; set; }
+
+        [JsonProperty("timestamp")]
 		public DateTime TimeStamp { get; set; }
 
 	}

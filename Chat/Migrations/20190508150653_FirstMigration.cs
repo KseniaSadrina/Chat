@@ -195,8 +195,8 @@ namespace Chat.Migrations
                     Sender = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     SessionName = table.Column<string>(nullable: true),
-                    TimeStamp = table.Column<DateTime>(nullable: false),
-                    ChatSessionId = table.Column<int>(nullable: true)
+                    ChatSessionId = table.Column<int>(nullable: false),
+                    TimeStamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -206,7 +206,7 @@ namespace Chat.Migrations
                         column: x => x.ChatSessionId,
                         principalTable: "ChatSessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

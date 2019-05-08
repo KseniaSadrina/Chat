@@ -84,7 +84,9 @@ namespace Chat.DAL
     public async Task<IEnumerable<ChatSession>> GetSessionsByTrainingId(int trainingId)
     {
       return await _context.ChatSessions
-        .Where(s => s.TrainingId == trainingId).ToListAsync();
+        .Where(s => s.TrainingId == trainingId)
+        .Include(s => s.Messages)
+        .ToListAsync();
     }
 
     public async Task<IEnumerable<ChatSession>> GetUserSessions(int userId, int trainingId)

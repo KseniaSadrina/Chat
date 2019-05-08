@@ -48,6 +48,9 @@ namespace Chat.Hubs
       Console.WriteLine($"Sending message: {message?.Text} to group: {message?.Sender}");
       await Clients.Groups(message.SessionName).SendAsync("message", message);
       await _context.Messages.AddAsync(message);
+
+      await _context.AddAsync(message);
+      await _context.SaveChangesAsync();
     }
 
   }
