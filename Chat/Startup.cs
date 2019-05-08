@@ -6,6 +6,10 @@ using Chat.Hubs;
 using Microsoft.Extensions.Configuration;
 using Chat.DAL;
 using Microsoft.EntityFrameworkCore;
+using Models;
+using Microsoft.AspNetCore.Identity;
+using Chat.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Chat
 {
@@ -24,7 +28,7 @@ namespace Chat
 		{
       services.AddDbContext<ChatContext>
           (options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
-
+      ConfigureAuthentication(services);
       services.AddScoped<ITrainingService, TrainingService>();
       services.AddScoped<ISessionsService, SessionService>();
       services.AddMvc();
@@ -39,8 +43,23 @@ namespace Chat
       services.AddSignalR();
     }
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    private void ConfigureAuthentication(IServiceCollection services)
+    {
+
+      services.AddIdentity<User, Role>()
+          .AddEntityFrameworkStores<ChatContext>()
+          .AddDefaultTokenProviders();
+
+      services.AddAuthentication().AddGoogle(googleOptions =>
+      {
+        googleOptions.ClientId = Configuration.GetSection("Authentication").GetSection("Google")["ClientId"];
+        googleOptions.ClientSecret = Configuration.GetSection("Authentication").GetSection("Google")["ClientSecret"];
+      });
+
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public async void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<User> userManager, RoleManager<Role> roleManager, ILogger<Startup> logger)
 		{
 			app.Use(async (context, next) => {
 				await next();
@@ -53,6 +72,9 @@ namespace Chat
 				}
 			});
 
+      await roleManager.SeedRoles(logger);
+      await userManager.SeedUserRoles(logger);
+
       app.UseCors("MyPolicy");
       app.UseWebSockets();
       app.UseSignalR(routes =>
@@ -63,6 +85,7 @@ namespace Chat
       app.UseMvcWithDefaultRoute();
 			app.UseDefaultFiles();
 			app.UseStaticFiles();
-		}
-	}
+      app.UseAuthentication();
+    }
+  }
 }
