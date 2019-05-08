@@ -1,4 +1,5 @@
-﻿using Models.Enums;
+﻿using Microsoft.AspNetCore.Identity;
+using Models.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,18 +8,14 @@ using System.Text;
 
 namespace Models
 {
-	public class User
-	{
+    public class User : IdentityUser<int>
+    {
 		public User()
 		{
 			Sessions = new List<SessionUser>();
 		}
 
-		[JsonProperty("id")]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int Id { get; set; }
-
-		[JsonProperty("sender")]
+        [JsonProperty("fullName")]
 		[NotMapped]
 		public string FullName => String.Join(" ", FirstName, LastName);
 
@@ -28,13 +25,7 @@ namespace Models
 		[JsonProperty("lastName")]
 		public string LastName { get; set; }
 
-		[JsonProperty("useName")]
-		public string UserName { get; set; }
-
-		[JsonProperty("email")]
-		public string Email { get; set; }
-
-		[JsonProperty("sessions")]
+        [JsonProperty("sessions")]
 		public virtual ICollection<SessionUser> Sessions { get; set; }
 
 		[JsonProperty("type")]

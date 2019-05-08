@@ -1,4 +1,5 @@
 using Chat.Helpers;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Chat.DAL
 {
-  public class ChatContext : DbContext
+  public class ChatContext : IdentityDbContext<User, Role, int>
   {
 
     public ChatContext(DbContextOptions<ChatContext> options) : base(options)
@@ -66,27 +67,6 @@ namespace Chat.DAL
              Description = "Any malicious computer program which misleads users of its true intent. The term is derived from the Ancient Greek story of the deceptive wooden horse that led to the fall of the city of."
            }
      );
-
-      modelBuilder.Entity<User>().HasData(
-          new User
-          {
-            Id = Consts.MARLEYID,
-            FirstName = "Bot",
-            LastName = "Marley",
-            UserName = "Marley",
-            UserType = Models.Enums.UserType.Bot,
-            Email = "sdfdsf@sdfdsf.com"
-          },
-           new User
-           {
-             Id = 2,
-             FirstName = "Ksenia",
-             LastName = "Sadrina",
-             UserName = "Makaka",
-             UserType = Models.Enums.UserType.Human,
-             Email = "dfdsfsfsdfdsf@sdfdsf.com"
-           }
-      );
     }
 
     public DbSet<ChatSession> ChatSessions { get; set; }
@@ -99,6 +79,5 @@ namespace Chat.DAL
 
     public DbSet<SessionUser> SessionsUsers { get; set; }
 
-    public DbSet<User> Users { get; set; }
   }
 }
