@@ -12,6 +12,7 @@ import { ChatSession } from 'src/app/models/chatSession';
   templateUrl: './training-details.component.html',
   styleUrls: ['./training-details.component.css']
 })
+
 export class TrainingDetailsComponent implements OnInit {
 
   training: Observable<Training>;

@@ -1,15 +1,37 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
-import { LogoutComponent } from './components/logout/logout.component';
-import { TrainingDetailsComponent } from './components/training-details/training-details.component';
+import { TrainingDetailsComponent } from './components/trainings/training-details/training-details.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { HomeComponent } from './components/home/home.component';
+import { TrainingsListComponent } from './components/trainings/trainings-list/trainings-list.component';
+import { TrainingsComponent } from './components/trainings/trainings.component';
+import { AddTrainingComponent } from './components/trainings/add-training/add-training.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'trainings/1', pathMatch: 'full' },
-  { path: 'trainings', redirectTo: 'trainings/1'},
-  { path: 'login', component: LoginComponent },
-  { path: 'logout', component: LogoutComponent },
-  { path: 'trainings/:id', component: TrainingDetailsComponent },
+  { path: '', redirectTo: 'home/trainings/1', pathMatch: 'full' },
+  { path: 'home',
+    component: HomeComponent,
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'trainings', component: TrainingsComponent,
+        children: [
+          {
+            path: ':id',
+            component: TrainingDetailsComponent
+          },
+          {
+            path: 'add-training',
+            component: AddTrainingComponent
+          },
+          {
+            path: ':id/add-training',
+            redirectTo: 'add-training'
+          }
+        ]}
+    ]
+  },
+  { path: '**', component: PageNotFoundComponent}
 ];
 
 @NgModule({

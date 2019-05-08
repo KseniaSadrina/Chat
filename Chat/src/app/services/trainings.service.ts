@@ -44,13 +44,20 @@ export class TrainingsService extends ServiceBase {
     // get current selected training index
     this.router.events.pipe(
         filter(e => e instanceof RoutesRecognized),
-        map(e => (e as RoutesRecognized).state.root.firstChild.params),
-        map(params => this.currentIndex.next(Number(params.id)))
+        map(e => {
+          console.log(e);
+          return (e as RoutesRecognized).state.root.firstChild.params;
+
+        }),
+        map(params => {
+          this.currentIndex.next(Number(params.id));
+          console.log(params.id);
+        } )
     ).subscribe();
 
     // update the selected training when the trainings change or the selected index changes
     this.currentIndex.pipe(
-      combineLatest(this.trainings, (indx, items) => this.currentTraining.next(items[indx - 1]))
+      combineLatest(this.trainings, (indx, items) => this.currentTraining.next(items[indx]))
     ).subscribe();
   }
 

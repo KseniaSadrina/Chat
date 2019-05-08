@@ -1,0 +1,12 @@
+.chat-container {
+  margin-right: 8vw;
+  margin-left: 8vw;
+  margin-top: 2rem;
+  border: 2px solid lime;
+  height: 81%;
+}
+
+.blur-me {
+  filter: blur(4px);
+  background: white;
+}

@@ -1,0 +1,28 @@
+<div class="container mt-4 mb-4">
+    <div mat-dialog-title class="d-flex">
+      <i class="fas fa-sign-in-alt mt-2 mr-2"></i>
+      <h2 >Login</h2>
+    </div>
+    <mat-dialog-content [formGroup]="loginForm">
+
+      <div class="form-field" *ngIf="loginForm.get('userName') as field">
+        <mat-form-field class="mr-2">
+          <input matInput placeholder="Username" [formControl]="field">
+        </mat-form-field>
+        <div *ngIf="field.touched &&field.hasError('required')" class="text-danger">required</div>
+      </div>
+      <div class="form-field" *ngIf="loginForm.get('password') as field">
+        <mat-form-field class="mr-2">
+          <input matInput type="password" placeholder="Password" [formControl]="field">
+        </mat-form-field>
+        <div *ngIf="field.touched && field.hasError('required')" class="text-danger"> required</div>
+      </div>
+
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-button type="button">Register</button>
+      <button mat-raised-button type="submit" [disabled]="!loginForm.valid">Login</button>
+    </mat-dialog-actions>
+  </div>

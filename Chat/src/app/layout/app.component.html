@@ -1,24 +1,5 @@
-<div *ngIf="authentication" class="example-container">
-
-  <app-head></app-head>
-  <div class="chat-container">
-
-    <mat-drawer-container class="chat">
-
-      <mat-drawer mode="side" class="sidenav" opened >
-        <app-trainings-list></app-trainings-list>
-      </mat-drawer>
-
-      <mat-drawer-content>
-        <router-outlet></router-outlet>
-      </mat-drawer-content>
-
-    </mat-drawer-container>
-    </div>
-  </div>
-
-  <div *ngIf="!authentication">
-  <app-login></app-login>
+<div class="example-container">
+  <router-outlet></router-outlet>
 </div>
 
 <!-- <p-growl [(value)]="notifications | async"></p-growl> -->

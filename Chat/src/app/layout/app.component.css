@@ -4,27 +4,3 @@
   background: black;
 
 }
-
-.example-sidenav-content {
-  display: flex;
-  height: 100%;
-  align-items: end;
-  justify-content: center;
-
-}
-
-.chat-container {
-  margin-right: 8vw;
-  margin-left: 8vw;
-  margin-top: 2rem;
-  border: 2px solid lime;
-  height: 81%;
-}
-
-.chat {
-  height: 100%;
-}
-
-.sidenav {
-  width: 21%;
-}

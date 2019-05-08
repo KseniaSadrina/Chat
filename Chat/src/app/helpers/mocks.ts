@@ -3,14 +3,14 @@ export const MARLEY = { id: 1, fullName: 'Bot Marley', userName: 'Marley', type:
 export const ME = { id: 2, fullName: 'Ksenia Sadrina', userName: 'Makaka', type: 0, unreadMessages: {'xcvxcv': 1, 'vbngh': 3, 'gfhfgh': 1 }};
 
 export const MESSAGES = [
-  { id: 1, sender: MARLEY, text: 'Hi there, welcome to our training. If you have questions feel free to ask me.', sessionId: 1, timestamp: new Date('2019-04-06T10:52:15')},
-  { id: 2, sender: ME, text: 'Hi, what kind of training is it?', sessionId: 1, timestamp: new Date('2019-04-06T10:52:50')},
-  { id: 3, sender: MARLEY, text: 'this is an apache shutdown training.', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
-  { id: 4, sender: ME, text: 'cool, which tool should I use to start?', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
-  { id: 5, sender: MARLEY, text: 'Try using zenoss', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
-  { id: 6, sender: ME, text: 'Ok, i\'ll try.', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
-  { id: 7, sender: ME, text: 'thanks for the help', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
-  { id: 8, sender: MARLEY, text: 'You are welcome', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')}
+  { id: 1, sender: MARLEY.userName, text: 'Hi there, welcome to our training. If you have questions feel free to ask me.', sessionId: 1, timestamp: new Date('2019-04-06T10:52:15')},
+  { id: 2, sender: ME.userName, text: 'Hi, what kind of training is it?', sessionId: 1, timestamp: new Date('2019-04-06T10:52:50')},
+  { id: 3, sender: MARLEY.userName, text: 'this is an apache shutdown training.', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
+  { id: 4, sender: ME.userName, text: 'cool, which tool should I use to start?', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
+  { id: 5, sender: MARLEY.userName, text: 'Try using zenoss', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
+  { id: 6, sender: ME.userName, text: 'Ok, i\'ll try.', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
+  { id: 7, sender: ME.userName, text: 'thanks for the help', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')},
+  { id: 8, sender: MARLEY.userName, text: 'You are welcome', sessionId: 1, timestamp: new Date('2019-04-06T10:54:15')}
 ];
 
 export const SQLINJECTION = {  id: 1,

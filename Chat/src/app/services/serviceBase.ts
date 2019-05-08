@@ -31,8 +31,11 @@ export abstract class ServiceBase {
         if (this.hubConnection) {
             // start hub connection
           this.hubConnection.start()
-          .then(() => console.log(['Connection with', this.hubType, 'hub has started.'].join(" ")))
-          .catch(err => console.error(err.toString()));
+          .then(() => console.log(['Connection with', this.hubType, 'hub has started.'].join(' ')))
+          .catch(err => {
+            if (!err) { return; }
+            console.error(err.toString());
+          });
         }
     }
 

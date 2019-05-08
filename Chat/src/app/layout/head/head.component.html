@@ -1,5 +1,14 @@
 <nav class="navbar navbar-light bg-light sticky-top p-2 ">
-    <i class="fas fa-shield-alt fa-2x mb-2 mr-2 shield" height="30px" width="30px"></i>
-    <h2 class="navbar-brand"> {{title}} </h2>
-    <button type="button" class="btn button btn-outline-primary btn-sm ml-auto" [routerLink]=" ['./logout'] ">Logout</button>
+    <i class="fas fa-shield-alt fa-2x mb-2 mr-2 shield"></i>
+    <h2 class="navbar-brand"> {{ title }} </h2>
+
+    <div class="ml-auto">
+      <div *ngIf="isLoggedIn | async" class="d-flex align-text-bottom">
+            <i class="far fa-2x fa-user-circle col-2 mt-2"></i>
+            <span class="mr-2 align-text-bottom"> Hi {{ loggedInUser | async }} </span>
+        <button type="button" class="btn button btn-outline-primary btn-sm" (click)="logout()">Logout</button>
+      </div>
+      <button type="button" *ngIf="!(isLoggedIn | async) && !(isLoggingIn | async)" routerLink="./login"
+      class="btn button btn-outline-primary btn-sm">Login</button>
+    </div>
 </nav>

@@ -13,47 +13,48 @@ import { Training } from 'src/app/models/Training';
   styleUrls: ['./add-training.component.css']
 })
 export class AddTrainingComponent implements OnInit, OnDestroy {
-  
+
+  constructor(public dialogRef: MatDialogRef<AddTrainingComponent>,
+              private trainingsService: TrainingsService,
+              private scenarioService: ScenariosService) { }
+
   public newTrainingForm = new FormGroup({
     name: new FormControl('', Validators.required),
     scenario: new FormControl(null, Validators.required),
     state: new FormControl(0)
   });
-  
-  scenarioDescription = new BehaviorSubject<string>("");
-  scenarios: Observable<Scenario[]>;
-  subscription : Subscription;
 
-  constructor(public dialogRef: MatDialogRef<AddTrainingComponent>,
-    private trainingsService: TrainingsService,
-    private scenarioService: ScenariosService) { }
+  scenarioDescription = new BehaviorSubject<string>('');
+  scenarios: Observable<Scenario[]>;
+  subscription: Subscription;
+
+  compareFn: ((f1: Scenario, f2: Scenario) => boolean) | null = this.compareByValue;
 
   ngOnInit() {
     this.scenarios = this.scenarioService.scenarios$;
-    if (this.newTrainingForm.controls["scenario"])
-      this.subscription = this.newTrainingForm.controls["scenario"].valueChanges.subscribe((res: Scenario) => {
+    if (this.newTrainingForm.controls.scenario) {
+      this.subscription = this.newTrainingForm.controls.scenario.valueChanges.subscribe((res: Scenario) => {
         this.scenarioDescription.next(res.description);
       });
+    }
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  compareFn: ((f1: Scenario, f2: Scenario) => boolean) | null = this.compareByValue;
-
-  compareByValue(f1: any, f2: any) { 
-    return f1 && f2 && f1.id === f2.id; 
+  compareByValue(f1: any, f2: any) {
+    return f1 && f2 && f1.id === f2.id;
   }
 
   onSubmit() {
-    var trainingObj = new Training(this.newTrainingForm.value);
+    const trainingObj = new Training(this.newTrainingForm.value);
     this.trainingsService.startNewTraining(trainingObj);
     this.dialogRef.close();
   }
-  
+
 }

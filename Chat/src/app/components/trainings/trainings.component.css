@@ -1,0 +1,16 @@
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: end;
+  justify-content: center;
+
+}
+
+.chat {
+  height: 100%;
+}
+
+.sidenav {
+  width: 21%;
+}

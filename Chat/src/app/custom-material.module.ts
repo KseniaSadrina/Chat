@@ -1,18 +1,17 @@
-import {MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, MatSelectModule} from '@angular/material';
-
-import {MatInputModule} from '@angular/material';
-import { MatListModule} from '@angular/material';
-import {MatCheckboxModule} from '@angular/material';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, MatSelectModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
+import { MatListModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgModule } from '@angular/core';
 
 @NgModule({
   imports: [
-    MatInputModule, 
-    MatInputModule, 
+    MatInputModule,
+    MatInputModule,
     MatListModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
     MatFormFieldModule,
@@ -22,11 +21,11 @@ import { NgModule } from '@angular/core';
     MatTooltipModule,
     MatSelectModule
 ],
-  exports: [      
-    MatInputModule, 
-    MatInputModule, 
+  exports: [
+    MatInputModule,
+    MatInputModule,
     MatListModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
     MatFormFieldModule,
