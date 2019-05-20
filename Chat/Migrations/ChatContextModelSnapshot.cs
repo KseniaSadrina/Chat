@@ -122,6 +122,8 @@ namespace Chat.Migrations
 
                     b.Property<string>("Sender");
 
+                    b.Property<int>("SenderType");
+
                     b.Property<string>("SessionName");
 
                     b.Property<string>("Text");
@@ -156,6 +158,17 @@ namespace Chat.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Models.Salt", b =>
+                {
+                    b.Property<int>("UserId");
+
+                    b.Property<string>("Secret");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Salts");
                 });
 
             modelBuilder.Entity("Models.Scenario", b =>
@@ -329,6 +342,14 @@ namespace Chat.Migrations
                     b.HasOne("Models.ChatSession")
                         .WithMany("Messages")
                         .HasForeignKey("ChatSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Models.Salt", b =>
+                {
+                    b.HasOne("Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -1,6 +1,6 @@
 <div>
   <div class="trainings-heading p-3">
-    <div class="row mr-2 ml-2">
+    <div class="row mr-2 ml-2 mb-1">
       <h3 class="mr-auto mt-2">{{title}}</h3>
       <button mat-type="button" mat-icon-button (click)="openDialog()"  matTooltip="Add New Training" aria-label="Button that displays a tooltip when focused or hovered over">
         <mat-icon class="mat-icon-rtl-mirror"> add_box</mat-icon>
@@ -12,7 +12,7 @@
         <a [routerLink]="[i]" routerLinkActive="active" class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between mb-2">
             <h5 class="mb-1">{{ training.name }}</h5>
-            <span class="badge badge-danger badge-pill pt-2" title="Unread Messages">{{ (user | async).unreadMessages[training.name] }}</span>
+            <!-- <span class="badge badge-danger badge-pill pt-2" title="Unread Messages">{{ (user | async)?.unreadMessages[training.name] }}</span> -->
           </div>
           <p>{{training.scenario.description}}</p>
           <small>{{training.scenario.name}}</small>

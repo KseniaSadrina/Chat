@@ -9,13 +9,12 @@ import { LoginDialogComponent } from './login-dialog/login-dialog.component';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
+export class LoginComponent implements OnInit, AfterViewInit {
 
   constructor(private dialog: MatDialog,
               private router: Router,
               private route: ActivatedRoute) { }
 
-  isOpen = false;
   dialogRef: MatDialogRef<LoginDialogComponent>;
   dialogRefSub: Subscription;
 
@@ -23,21 +22,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.isOpen) { return; }
     setTimeout(() => this.openLoginDialog());
-  }
-
-  ngOnDestroy(): void {
-    if (this.dialogRefSub)  { this.dialogRefSub.unsubscribe(); }
   }
 
   openLoginDialog() {
     this.dialogRef = this.dialog.open(LoginDialogComponent, { closeOnNavigation: true, disableClose: true } );
-    this.isOpen = true;
-    this.dialogRefSub =  this.dialogRef.afterClosed().subscribe((() => {
-      this.isOpen = false;
-    }).bind(this));
-
   }
 
 

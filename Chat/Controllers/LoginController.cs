@@ -1,37 +1,70 @@
+using Chat.Helpers;
+using Chat.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Models;
+using System.Threading.Tasks;
+
 
 namespace Chat.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  [AllowAnonymous]
   public class LoginController : ControllerBase
   {
 
-      // GET: api/Login/5
-      [HttpGet("{id}", Name = "Get")]
-      public string Get(int id)
-      {
-          return "value";
-      }
+    private readonly UserManager<User> _userManager;
+    private readonly IAuthenticationService _authService;
 
-      // POST: api/Login
-      [HttpPost]
-      public void Post([FromBody] string value)
-      {
-      }
+    private readonly string _badUser = "This user doesn't exist.";
+    private object _badPassword = "You've entered the wrong password.";
+    private object _badToken = "Your refresh token is invalid.";
 
-      // PUT: api/Login/5
-      [HttpPut("{id}")]
-      public void Put(int id, [FromBody] string value)
-      {
-      }
+    public LoginController(UserManager<User> userManager,
+      IAuthenticationService authenticationService)
+    {
+      _userManager = userManager;
+      _authService = authenticationService;
+    }
 
-      // DELETE: api/ApiWithActions/5
-      [HttpDelete("{id}")]
-      public void Delete(int id)
-      {
-      }
+    // POST: api/Login
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Post([FromBody] DTOCredentials credentials)
+    {
+      if (credentials == null) return BadRequest();
+
+      // get user from db
+      var user = await _userManager.FindByNameAsync(credentials.Username);
+      if (user == null) return BadUserRequest();
+
+      var result = await _authService.Authenticate(user, credentials);
+
+      if (result == null) return BadPassword();
+      return Ok(result);
+    }
+
+    [HttpPut("refreshToken")]
+    [Authorize]
+    public async Task<IActionResult> Put([FromBody] DTOUser dtoUser)
+    {
+      if (dtoUser == null) return BadRequest();
+
+      // get user from db
+      var user = await _userManager.FindByNameAsync(dtoUser.UserName);
+      if (user == null) return BadUserRequest();
+
+      var result = await _authService.RefreshAccessToken(user, dtoUser.RefreshToken);
+
+      if (result == null) return BadToken();
+      return Ok(result);
+    }
+
+    private IActionResult BadToken() => Unauthorized(_badToken);
+
+    private IActionResult BadUserRequest() => BadRequest(_badUser);
+
+    private IActionResult BadPassword() => Unauthorized(_badPassword);  
   }
 }

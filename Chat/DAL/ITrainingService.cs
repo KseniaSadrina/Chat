@@ -23,5 +23,7 @@ namespace Chat.DAL
 
     Task<DbExecutionStatus> Update(int id, Training updatedTraining);
 
+    Task<Training> GetTrainingBySessionId(int sessionId);
+
   }
 }

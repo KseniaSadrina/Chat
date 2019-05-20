@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './layout/app.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from 'src/app/custom-material.module';
 import { HeadComponent } from './layout/head/head.component';
@@ -22,6 +22,9 @@ import { LoginDialogComponent } from './components/login/login-dialog/login-dial
 import { SocialLoginModule,
          AuthServiceConfig,
          GoogleLoginProvider, LinkedInLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
+import { RegisterComponent } from './components/register/register.component';
+import { RegisterDialogComponent } from './components/register/register-dialog/register-dialog.component';
+import { JwtInterceptor } from './helpers/jwt-interceptor';
 
 
 const config = new AuthServiceConfig([
@@ -51,7 +54,9 @@ const config = new AuthServiceConfig([
     PageNotFoundComponent,
     HomeComponent,
     TrainingsComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    RegisterComponent,
+    RegisterDialogComponent
   ],
   imports: [
     CustomMaterialModule,
@@ -64,9 +69,12 @@ const config = new AuthServiceConfig([
     GrowlModule,
     SocialLoginModule
   ],
-  providers: [ { provide: AuthServiceConfig, useFactory: config } ],
+  providers: [
+    { provide: AuthServiceConfig, useFactory: config },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
-  entryComponents: [AddTrainingComponent, LoginDialogComponent]
+  entryComponents: [AddTrainingComponent, LoginDialogComponent, RegisterDialogComponent]
 })
 
 export class AppModule { }

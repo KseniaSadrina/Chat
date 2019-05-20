@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Models.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,5 +29,7 @@ namespace Models
         [JsonProperty("timestamp")]
 		public DateTime TimeStamp { get; set; }
 
-	}
+        [JsonProperty("senderType")]
+        public UserType SenderType { get; set; }
+    }
 }

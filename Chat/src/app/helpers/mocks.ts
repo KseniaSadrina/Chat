@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
-export const MARLEY = { id: 1, fullName: 'Bot Marley', userName: 'Marley', type: 1, unreadMessages: {'xcvxcv': 0, 'vbngh': 0, 'gfhfgh': 0 }};
-export const ME = { id: 2, fullName: 'Ksenia Sadrina', userName: 'Makaka', type: 0, unreadMessages: {'xcvxcv': 1, 'vbngh': 3, 'gfhfgh': 1 }};
+export const MARLEY = { id: 1, fullName: 'Bot Marley', firstName: '', lastName: '', userName: 'Marley', type: 1, unreadMessages: {xcvxcv: 0, vang: 0, gfhfgh: 0 }, userType: 1};
+export const ME = { id: 2, fullName: 'Ksenia Sadrina', firstName: '', lastName: '', userName: 'Makaka', type: 0, unreadMessages: {xcvxcv: 1, vang: 3, gfhfgh: 1 }, userType: 0};
 
 export const MESSAGES = [
   { id: 1, sender: MARLEY.userName, text: 'Hi there, welcome to our training. If you have questions feel free to ask me.', sessionId: 1, timestamp: new Date('2019-04-06T10:52:15')},
@@ -31,3 +31,5 @@ export const TRAINING = [
   { id: 3, name: 'We are Trojan!', scenario: TROJAN, state: 1 },
   { id: 4, name: 'Fun with sql injection', scenario: SQLINJECTION, state: 3 },
 ];
+
+export const DFLTERROR = 'Sorry, something went wrong';

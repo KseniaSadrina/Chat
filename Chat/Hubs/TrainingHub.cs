@@ -1,4 +1,5 @@
 using Chat.DAL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Models;
 using Models.Enums;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Chat.Hubs
 {
+  [Authorize]
   public class TrainingHub: Hub
   {
 

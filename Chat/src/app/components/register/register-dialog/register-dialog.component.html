@@ -1,0 +1,80 @@
+
+<div *ngIf="!(isLoading | async)" class="container mt-4 mb-4">
+  <div mat-dialog-title class="d-flex">
+      <i class="fas fa-file-alt mt-2 mr-2"></i>
+    <h2 >Register</h2>
+  </div>
+  <mat-dialog-content [formGroup]="registerForm">
+    <div class="d-inline-flex">
+      <div class="form-field" *ngIf="registerForm.get('firstName') as field">
+        <mat-form-field class="mr-2">
+          <input matInput placeholder="First Name" [formControl]="field" required>
+        </mat-form-field>
+        <div *ngIf="field.touched &&field.hasError('required')" class="text-danger">Required</div>
+        <div *ngIf="field.touched && field.hasError('minlength')" class="text-danger">Please enter at least 3 characters</div>
+      </div>
+
+      <div class="form-field" *ngIf="registerForm.get('lastName') as field">
+        <mat-form-field class="mr-2">
+          <input matInput placeholder="Last Name" [formControl]="field" required>
+        </mat-form-field>
+        <div *ngIf="field.touched &&field.hasError('required')" class="text-danger">Required</div>
+        <div *ngIf="field.touched && field.hasError('minlength')" class="text-danger">Please enter at least 3 characters</div>
+      </div>
+    </div>
+
+      <div class="form-field" *ngIf="registerForm.get('userName') as field">
+        <mat-form-field class="mr-2">
+          <input matInput placeholder="Username" [formControl]="field" required>
+        </mat-form-field>
+        <img src="assets/spinner.gif" *ngIf="field.pending" class="spinner">
+        <div *ngIf="field.touched &&field.hasError('required')" class="text-danger">Required</div>
+        <div *ngIf="field.touched && field.hasError('minlength')" class="text-danger">Please enter at least 3 characters</div>
+        <div *ngIf="field.touched && field.hasError('nameFree')" class="text-danger">Username is already taken</div>
+      </div>
+
+      <div class="d-inline-flex">
+        <div class="form-field" *ngIf="registerForm.get('role') as field">
+          <mat-form-field class="mr-2">
+              <mat-select placeholder="Role" [formControl]="field">
+                  <mat-option [value]="role" *ngFor="let role of roles | async">{{role}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-field" *ngIf="registerForm.get('email') as field">
+          <mat-form-field class="mr-2">
+              <input matInput type="email" placeholder="Email" [formControl]="field" required>
+          </mat-form-field>
+          <div *ngIf="field.touched && field.hasError('required')" class="text-danger"> required</div>
+          <div *ngIf="field.touched && field.hasError('email')" class="text-danger"> Field must include @</div>
+        </div>
+    </div>
+
+    <!-- </div> -->
+
+    <div class="d-inline-flex">
+      <div class="form-field" *ngIf="registerForm.get('credentials.password') as field">
+        <mat-form-field class="mr-2">
+          <input matInput type="password" placeholder="Password" [formControl]="field" required>
+        </mat-form-field>
+        <div *ngIf="field.touched && field.hasError('required')" class="text-danger"> required</div>
+        <div *ngIf="field.touched && field.hasError('minlength')" class="text-danger"> Please enter at least 6 characters</div>
+      </div>
+        <div class="form-field" *ngIf="registerForm.get('credentials.verify') as field">
+          <mat-form-field class="mr-2">
+            <input matInput type="password" placeholder="Verify Password" [formControl]="field" required>
+          </mat-form-field>
+          <div *ngIf="field.touched && registerForm.get('credentials').hasError('verifyPassword')" class="text-danger"> Password Mismatch</div>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+  <mat-dialog-actions class="d-flex">
+    <div *ngIf="(serverError | async) as err" class="text-danger"> {{err}} </div>
+    <button mat-raised-button class="ml-auto" mat-type="button" (click)="register()" [disabled]="!registerForm.valid">Register</button>
+  </mat-dialog-actions>
+
+</div>
+<div *ngIf="(isLoading | async)" class="bars-container d-flex align-items-center justify-content-center">
+  <img src="assets/bars.gif">
+</div>

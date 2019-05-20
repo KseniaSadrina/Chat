@@ -1,9 +1,11 @@
-.block-btn {
-  width: 100%;
-}
 
 .centered {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.server-errors {
+  width: 40%;
+  height: 10%;
 }

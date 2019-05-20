@@ -87,6 +87,14 @@ namespace Chat.DAL
         .ToListAsync();
     }
 
+    public async Task<Training> GetTrainingBySessionId(int sessionId)
+    {
+      return await (from t in _context.Trainings
+       join s in _context.ChatSessions on t.Id equals s.TrainingId
+       where s.Id == sessionId
+       select t).FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<ChatSession>> GetTrainingSessions(int id)
     {
       return await _context.ChatSessions

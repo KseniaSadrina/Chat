@@ -1,12 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { SessionsService } from 'src/app/services/sessions.service';
 import { Observable, Subscription, of } from 'rxjs';
 import { Message } from 'src/app/models/Message';
 import { FormControl, Validators } from '@angular/forms';
 import { ChatSession } from 'src/app/models/chatSession';
 import { map } from 'rxjs/operators';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ME } from 'src/app/helpers/mocks';
 import { CustomAuthService } from 'src/app/services/custom-auth.service';
 import { User } from 'src/app/models/User';
 
@@ -15,14 +13,12 @@ import { User } from 'src/app/models/User';
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.css']
 })
-export class SessionComponent implements OnInit {
-
+export class SessionComponent implements OnInit, AfterViewChecked {
 
   constructor(private sessionsService: SessionsService,
-              private auth: CustomAuthService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+              private auth: CustomAuthService) { }
 
+  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   message = new FormControl('',  Validators.required);
   currentSession: Observable<ChatSession>;
   currentUser: Observable<User>;
@@ -30,7 +26,7 @@ export class SessionComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
   ngOnInit() {
-    this.currentUser = this.auth.currentUser;
+    this.currentUser = this.auth.currentUser$;
     this.currentSession = this.sessionsService.currentSession$;
     this.messages = this.currentSession.pipe(
       map(session => {
@@ -38,21 +34,29 @@ export class SessionComponent implements OnInit {
         if (session && session.messages) { res = session.messages; }
         return res;
       })
-    );
+      );
+    }
 
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
   }
 
-  public sendMessage(): void {
-      const data = new Message();
-      data.sender = ME.userName;
-      data.text = this.message.value;
-      data.timestamp = new Date(Date.now());
-      this.sessionsService.sendMessage(data);
-      this.message.setValue('');
-      this.message.markAsPristine();
+  public sendMessage(currentUser: User): void {
+    const data = new Message();
+    data.sender = currentUser.userName;
+    data.senderType = currentUser.type;
+    data.text = this.message.value;
+    data.timestamp = new Date(Date.now());
+    this.sessionsService.sendMessage(data);
+    this.message.setValue('');
+    this.message.markAsPristine();
   }
 
-  onKeydown(event: KeyboardEvent) {
-    if (event.keyCode === 13) { this.sendMessage(); }
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) {
+
+    }
   }
 }

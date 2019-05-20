@@ -2,11 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TrainingsService } from 'src/app/services/trainings.service';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { Training } from 'src/app/models/Training';
-import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { ME } from 'src/app/helpers/mocks';
 import { User } from 'src/app/models/User';
 import { AddTrainingComponent } from '../add-training/add-training.component';
+import { CustomAuthService } from 'src/app/services/custom-auth.service';
 
 export const DIALOG = 'dialog';
 export const SERVICE = 'service';
@@ -18,16 +17,19 @@ export const SERVICE = 'service';
 })
 export class TrainingsListComponent implements OnInit {
 
-  constructor(private trainingsService: TrainingsService, private route: ActivatedRoute, public dialog: MatDialog) { }
+  constructor(private trainingsService: TrainingsService,
+              private authService: CustomAuthService,
+              public dialog: MatDialog) { }
 
   public trainings: Observable<Training[]>;
   public selectedId: Observable<number>;
   public title = 'Trainings';
-  public user = new BehaviorSubject<User>(ME);
+  public user: Observable<User>;
 
   ngOnInit() {
     this.trainings = this.trainingsService.trainings$;
     this.selectedId = this.trainingsService.currentIndex$;
+    this.user = this.authService.currentUser$;
   }
 
   openDialog(): void {

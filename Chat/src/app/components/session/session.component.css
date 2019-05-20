@@ -35,7 +35,7 @@ ul {
 .message{
     border: 1px solid lime;
     max-width: 370px;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 
 .my-message {

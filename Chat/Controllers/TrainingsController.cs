@@ -7,11 +7,13 @@ using Chat.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Chat.Helpers;
 using Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Chat.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
+  [Authorize]
   public class TrainingsController : ControllerBase
   {
     private readonly ITrainingService _trainingService;
@@ -88,7 +90,7 @@ namespace Chat.Controllers
       if (result == DbExecutionStatus.Succeeded)
         await _hubContext.Clients.All.SendAsync("add", training);
 
-      return  result.ConvertToWebAPI<Training>(CreatedAtAction("GetTraining", new { id = training.Id }, training));
+      return result.ConvertToWebAPI<Training>(CreatedAtAction("GetTraining", new { id = training.Id }, training));
     }
 
   }

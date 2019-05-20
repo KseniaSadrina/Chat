@@ -21,12 +21,18 @@ export class HeadComponent implements OnInit {
 
   ngOnInit() {
     this.isLoggedIn = this.authService.isLoggedIn$;
-    this.loggedInUser = this.authService.currentUser.pipe(map((user: User) => user.fullName));
+    this.loggedInUser = this.authService.currentUser$
+    .pipe(
+      map((user: User) => {
+      if (user) { return user.fullName; }
+      else { return null; }
+      }
+    ));
     this.isLoggingIn = this.authService.isLoggingIn$;
   }
 
-  logout() {
-    this.authService.logout();
+  public async logout() {
+    await this.authService.logout();
   }
 
 }

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Models.Enums;
+using Models.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+
 
 namespace Models
 {
@@ -14,6 +15,16 @@ namespace Models
 		{
 			Sessions = new List<SessionUser>();
 		}
+
+        public User(RegistrationUser user, byte[] salt)
+        {
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            UserName = user.UserName;
+            Email = user.Email;
+            PasswordHash = user.Password.HashString(salt);
+            UserType = user.UserType;
+        }
 
         [JsonProperty("fullName")]
 		[NotMapped]
@@ -31,5 +42,6 @@ namespace Models
 		[JsonProperty("type")]
 		public UserType UserType { get; set; }
 
-	}
+    }
+
 }

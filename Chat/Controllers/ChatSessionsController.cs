@@ -6,11 +6,13 @@ using Models;
 using Chat.Helpers;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Chat.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
+  [Authorize]
   public class ChatSessionsController : ControllerBase
   {
     private readonly ISessionsService _sessionsService;

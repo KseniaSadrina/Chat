@@ -5,7 +5,7 @@
     <div class="ml-auto">
       <div *ngIf="isLoggedIn | async" class="d-flex align-text-bottom">
             <i class="far fa-2x fa-user-circle col-2 mt-2"></i>
-            <span class="mr-2 align-text-bottom"> Hi {{ loggedInUser | async }} </span>
+          <span class="mr-2 align-text-bottom"> Hi {{ loggedInUser | async }} </span>
         <button type="button" class="btn button btn-outline-primary btn-sm" (click)="logout()">Logout</button>
       </div>
       <button type="button" *ngIf="!(isLoggedIn | async) && !(isLoggingIn | async)" routerLink="./login"

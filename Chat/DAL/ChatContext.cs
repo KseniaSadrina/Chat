@@ -30,6 +30,7 @@ namespace Chat.DAL
       // Map many to many users to sessions
 
       modelBuilder.Entity<SessionUser>().HasKey(sc => new { sc.SessionId, sc.UserId });
+      modelBuilder.Entity<Salt>().HasKey(s => new { s.UserId });
 
       modelBuilder.Entity<SessionUser>()
         .HasOne<ChatSession>(sc => sc.Session)
@@ -78,6 +79,8 @@ namespace Chat.DAL
     public DbSet<Scenario> Scenarios { get; set; }
 
     public DbSet<SessionUser> SessionsUsers { get; set; }
+
+    public DbSet<Salt> Salts { get; set; }
 
   }
 }
