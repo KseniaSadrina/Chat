@@ -33,7 +33,15 @@ export class TrainingsService extends ServiceBase {
       'training',
       { add: 'add', update: 'update' } ,
       []);
-    this.hubType = 'training';
+
+    this.router.events.pipe(
+      filter(e => e instanceof ActivationEnd && !e.snapshot.firstChild),
+      map((e: ActivationEnd ) => e.snapshot.params),
+      map(params => {
+        this.currentIndex.next(Number(params.id));
+      })
+      ).subscribe();
+
   }
 
   private getTrainingsFromServer(): Observable<Training[]> {
@@ -77,27 +85,17 @@ export class TrainingsService extends ServiceBase {
       this.trainings.next(res);
      });
 
-    const routeSub = this.router.events.pipe(
-    filter(e => e instanceof ActivationEnd && !e.snapshot.firstChild),
-    map((e: ActivationEnd ) => e.snapshot.params),
-    map(params => {
-      this.currentIndex.next(Number(params.id));
-    })
-    ).subscribe();
-
     // update the selected training when the trainings change or the selected index changes
     const currentIndxSub = this.currentIndex.pipe(
       combineLatest(this.trainings, (indx, items) => this.currentTraining.next(items[indx]))
     ).subscribe();
 
-    this.subscriptions.push(routeSub);
     this.subscriptions.push(currentIndxSub);
-
   }
 
   protected deActivateService() {
     super.deActivateService();
-    if (this.currentIndex) { this.currentIndex.next(-1) };
+    if (this.currentIndex) { this.currentIndex.next(-1); }
     if (this.trainings) { this.trainings.next([]); }
     if (this.currentTraining) { this.currentTraining.next(null); }
   }
