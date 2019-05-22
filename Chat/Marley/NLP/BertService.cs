@@ -2,6 +2,8 @@ using Chat.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +17,7 @@ namespace Chat.Marley
   {
 
     private string _scriptPath;
+    private string _questionContextPath;
     private readonly ILogger<BertService> _logger;
 
     public BertService(IOptions<NlpConfiguration> configuration, ILogger<BertService> logger)
@@ -23,9 +26,19 @@ namespace Chat.Marley
       _logger = logger;
     }
 
-    public string AskQuestionAboutContext(string context, string question)
+    public string AskQuestionAboutContext(QAModelInput input)
     {
+      SaveInputToJson(input);
       return AskQuestionAboutContext();
+    }
+
+    private void SaveInputToJson(QAModelInput input)
+    {
+      using (StreamWriter file = File.CreateText(_questionContextPath))
+      {
+        JsonSerializer serializer = new JsonSerializer();
+        serializer.Serialize(file, input);
+      }
     }
 
     private string AskQuestionAboutContext()

@@ -2,13 +2,13 @@
 
 namespace Chat.Migrations
 {
-    public partial class senderTyoeToMessage : Migration
+    public partial class addedordertogoal : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "SenderType",
-                table: "Messages",
+                name: "Order",
+                table: "Goals",
                 nullable: false,
                 defaultValue: 0);
         }
@@ -16,8 +16,8 @@ namespace Chat.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "SenderType",
-                table: "Messages");
+                name: "Order",
+                table: "Goals");
         }
     }
 }

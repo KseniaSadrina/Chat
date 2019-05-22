@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chat.DAL;
 using Chat.Helpers;
+using Chat.Services;
 using Microsoft.AspNetCore.Identity;
 using Models;
 using Models.Enums;
@@ -19,6 +20,8 @@ namespace Chat.Marley
     private readonly ISessionsService _sessions;
     private readonly ITrainingService _trainings;
     private readonly INlpService _nlpService;
+    private readonly IGuideService _guideService;
+    private readonly IGoalsService _goalService;
     private readonly UserManager<User> _userManager;
 
     private readonly IList<string> _greetingWords = new List<string>()
@@ -38,12 +41,16 @@ namespace Chat.Marley
     public MarleyService(ISessionsService sessionsService,
       UserManager<User> userManager,
       INlpService nlpService,
-      ITrainingService trainingService)
+      ITrainingService trainingService,
+      IGuideService guideService,
+      IGoalsService goalService)
     {
       _sessions = sessionsService;
       _userManager = userManager;
       _nlpService = nlpService;
       _trainings = trainingService;
+      _guideService = guideService;
+      _goalService = goalService;
 
       Init();
     }
@@ -103,10 +110,10 @@ namespace Chat.Marley
     {
       if (message == null) return null ;
 
-      var scenario = (await _trainings.GetTrainingBySessionId(message.ChatSessionId)).Scenario;
-      // var currentGoal = 
-      var res = _nlpService.AskQuestionAboutContext("", message.Text);
-      if (String.IsNullOrEmpty(res))
+      var modelInput = await GenerateModelInput(message);
+
+      var res = _nlpService.AskQuestionAboutContext(modelInput);
+      if (string.IsNullOrEmpty(res))
         res = _botDefaultResponses[BotMessageHandler.Question];
 
       return GenerateMessage(message.ChatSessionId, message.SessionName, res);
@@ -126,6 +133,13 @@ namespace Chat.Marley
 
     }
 
+    private async Task<QAModelInput> GenerateModelInput(Message message)
+    {
+      var currentGoal = (await _goalService.GetCurrentGoalBySessionid(message.ChatSessionId))?.Goal;
+      var currentGoalContext = _guideService.GetGoalGuide(currentGoal);
+      var modelInput = new QAModelInput() { Context = currentGoalContext?.Description, Question = message.Text };
+      return modelInput;
+    }
     #endregion
   }
 }

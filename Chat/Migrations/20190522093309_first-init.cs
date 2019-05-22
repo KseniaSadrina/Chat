@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Chat.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class firstinit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,6 +64,19 @@ namespace Chat.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ChatSessions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Salts",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Secret = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salts", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,7 +209,8 @@ namespace Chat.Migrations
                     Text = table.Column<string>(nullable: true),
                     SessionName = table.Column<string>(nullable: true),
                     ChatSessionId = table.Column<int>(nullable: false),
-                    TimeStamp = table.Column<DateTime>(nullable: false)
+                    TimeStamp = table.Column<DateTime>(nullable: false),
+                    SenderType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -234,6 +248,26 @@ namespace Chat.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Goals",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Text = table.Column<string>(nullable: true),
+                    ScenarioId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Goals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Goals_Scenarios_ScenarioId",
+                        column: x => x.ScenarioId,
+                        principalTable: "Scenarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trainings",
                 columns: table => new
                 {
@@ -252,6 +286,25 @@ namespace Chat.Migrations
                         principalTable: "Scenarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrainingGoals",
+                columns: table => new
+                {
+                    GoalId = table.Column<int>(nullable: false),
+                    TrainingId = table.Column<int>(nullable: false),
+                    IsAchieved = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainingGoals", x => new { x.TrainingId, x.GoalId });
+                    table.ForeignKey(
+                        name: "FK_TrainingGoals_Goals_GoalId",
+                        column: x => x.GoalId,
+                        principalTable: "Goals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -307,6 +360,11 @@ namespace Chat.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Goals_ScenarioId",
+                table: "Goals",
+                column: "ScenarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_ChatSessionId",
                 table: "Messages",
                 column: "ChatSessionId");
@@ -315,6 +373,11 @@ namespace Chat.Migrations
                 name: "IX_SessionsUsers_UserId",
                 table: "SessionsUsers",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainingGoals_GoalId",
+                table: "TrainingGoals",
+                column: "GoalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trainings_ScenarioId",
@@ -343,7 +406,13 @@ namespace Chat.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "Salts");
+
+            migrationBuilder.DropTable(
                 name: "SessionsUsers");
+
+            migrationBuilder.DropTable(
+                name: "TrainingGoals");
 
             migrationBuilder.DropTable(
                 name: "Trainings");
@@ -356,6 +425,9 @@ namespace Chat.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Goals");
 
             migrationBuilder.DropTable(
                 name: "Scenarios");

@@ -27,21 +27,30 @@ namespace Chat.DAL
       modelBuilder.Entity<ChatSession>()
         .HasMany(e => e.Messages);
 
+      modelBuilder.Entity<Scenario>()
+        .HasMany(e => e.Goals);
+
       // Map many to many users to sessions
 
       modelBuilder.Entity<SessionUser>().HasKey(sc => new { sc.SessionId, sc.UserId });
+      modelBuilder.Entity<TrainingGoal>().HasKey(sc => new { sc.TrainingId, sc.GoalId });
       modelBuilder.Entity<Salt>().HasKey(s => new { s.UserId });
 
       modelBuilder.Entity<SessionUser>()
-        .HasOne<ChatSession>(sc => sc.Session)
+        .HasOne(sc => sc.Session)
         .WithMany(s => s.Users)
         .HasForeignKey(sc => sc.SessionId);
 
 
       modelBuilder.Entity<SessionUser>()
-          .HasOne<User>(sc => sc.User)
+          .HasOne(sc => sc.User)
           .WithMany(s => s.Sessions)
           .HasForeignKey(sc => sc.UserId);
+
+      modelBuilder.Entity<TrainingGoal>()
+        .HasOne(tg => tg.Goal)
+        .WithMany(g => g.TrainingGoals)
+        .HasForeignKey(sc => sc.GoalId);
 
       Seed(modelBuilder);
     }
@@ -71,6 +80,10 @@ namespace Chat.DAL
     }
 
     public DbSet<ChatSession> ChatSessions { get; set; }
+
+    public DbSet<Goal> Goals { get; set; }
+
+    public DbSet<TrainingGoal> TrainingGoals { get; set; }
 
     public DbSet<Message> Messages { get; set; }
 

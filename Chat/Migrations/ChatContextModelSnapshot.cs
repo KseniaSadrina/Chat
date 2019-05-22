@@ -113,6 +113,24 @@ namespace Chat.Migrations
                     b.ToTable("ChatSessions");
                 });
 
+            modelBuilder.Entity("Models.Goal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Order");
+
+                    b.Property<int>("ScenarioId");
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScenarioId");
+
+                    b.ToTable("Goals");
+                });
+
             modelBuilder.Entity("Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -162,7 +180,8 @@ namespace Chat.Migrations
 
             modelBuilder.Entity("Models.Salt", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Secret");
 
@@ -234,6 +253,21 @@ namespace Chat.Migrations
                     b.HasIndex("ScenarioId");
 
                     b.ToTable("Trainings");
+                });
+
+            modelBuilder.Entity("Models.TrainingGoal", b =>
+                {
+                    b.Property<int>("TrainingId");
+
+                    b.Property<int>("GoalId");
+
+                    b.Property<bool>("IsAchieved");
+
+                    b.HasKey("TrainingId", "GoalId");
+
+                    b.HasIndex("GoalId");
+
+                    b.ToTable("TrainingGoals");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -337,19 +371,19 @@ namespace Chat.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Models.Goal", b =>
+                {
+                    b.HasOne("Models.Scenario")
+                        .WithMany("Goals")
+                        .HasForeignKey("ScenarioId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Models.Message", b =>
                 {
                     b.HasOne("Models.ChatSession")
                         .WithMany("Messages")
                         .HasForeignKey("ChatSessionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Models.Salt", b =>
-                {
-                    b.HasOne("Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -371,6 +405,14 @@ namespace Chat.Migrations
                     b.HasOne("Models.Scenario", "Scenario")
                         .WithMany()
                         .HasForeignKey("ScenarioId");
+                });
+
+            modelBuilder.Entity("Models.TrainingGoal", b =>
+                {
+                    b.HasOne("Models.Goal", "Goal")
+                        .WithMany("TrainingGoals")
+                        .HasForeignKey("GoalId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chat.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20190508150653_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20190522103024_added-order-to-goal")]
+    partial class addedordertogoal
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -115,6 +115,24 @@ namespace Chat.Migrations
                     b.ToTable("ChatSessions");
                 });
 
+            modelBuilder.Entity("Models.Goal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Order");
+
+                    b.Property<int>("ScenarioId");
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScenarioId");
+
+                    b.ToTable("Goals");
+                });
+
             modelBuilder.Entity("Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -123,6 +141,8 @@ namespace Chat.Migrations
                     b.Property<int>("ChatSessionId");
 
                     b.Property<string>("Sender");
+
+                    b.Property<int>("SenderType");
 
                     b.Property<string>("SessionName");
 
@@ -158,6 +178,18 @@ namespace Chat.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Models.Salt", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Secret");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Salts");
                 });
 
             modelBuilder.Entity("Models.Scenario", b =>
@@ -223,6 +255,21 @@ namespace Chat.Migrations
                     b.HasIndex("ScenarioId");
 
                     b.ToTable("Trainings");
+                });
+
+            modelBuilder.Entity("Models.TrainingGoal", b =>
+                {
+                    b.Property<int>("TrainingId");
+
+                    b.Property<int>("GoalId");
+
+                    b.Property<bool>("IsAchieved");
+
+                    b.HasKey("TrainingId", "GoalId");
+
+                    b.HasIndex("GoalId");
+
+                    b.ToTable("TrainingGoals");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -326,6 +373,14 @@ namespace Chat.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Models.Goal", b =>
+                {
+                    b.HasOne("Models.Scenario")
+                        .WithMany("Goals")
+                        .HasForeignKey("ScenarioId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Models.Message", b =>
                 {
                     b.HasOne("Models.ChatSession")
@@ -352,6 +407,14 @@ namespace Chat.Migrations
                     b.HasOne("Models.Scenario", "Scenario")
                         .WithMany()
                         .HasForeignKey("ScenarioId");
+                });
+
+            modelBuilder.Entity("Models.TrainingGoal", b =>
+                {
+                    b.HasOne("Models.Goal", "Goal")
+                        .WithMany("TrainingGoals")
+                        .HasForeignKey("GoalId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

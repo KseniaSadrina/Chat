@@ -38,11 +38,20 @@ namespace Chat
 
       services.AddDbContext<ChatContext>
           (options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
-      services.AddScoped<ITrainingService, TrainingService>();
+
+      // Gerneral Services
       services.AddScoped<IAuthenticationService, JWTAuthenticationService>();
-      services.AddScoped<ISessionsService, SessionService>();
+      services.AddScoped<IGoalsService, GoalsService>();
+
+      // NLP
       services.AddScoped<INlpService, BertService>();
       services.AddScoped<IBotService, MarleyService>();
+
+      // DAL
+      services.AddScoped<ITrainingService, TrainingService>();
+      services.AddScoped<ISessionsService, SessionService>();
+      services.AddScoped<IGoalsService, GoalsService>();
+
       services.AddMvc();
       ConfigureAuthentication(services);
       services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
@@ -99,7 +108,6 @@ namespace Chat
           },
           OnAuthenticationFailed = ex =>
           {
-            
             return Task.CompletedTask;
           },
         };

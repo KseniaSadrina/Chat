@@ -1,3 +1,4 @@
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Chat.Marley
     /// <param name="context"> </param>
     /// <param name="question"></param>
     /// <returns></returns>
-    string AskQuestionAboutContext(string context, string question);
+    string AskQuestionAboutContext(QAModelInput modelInput);
 
   }
 }
