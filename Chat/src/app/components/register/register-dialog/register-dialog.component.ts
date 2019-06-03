@@ -6,9 +6,9 @@ import { filter } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { User, RegistrationUser } from 'src/app/models/User';
-import { UserType } from 'src/app/models/enums/UserType';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DFLTERROR } from 'src/app/helpers/mocks';
+import { UserType } from 'src/app/models/enums/user-type';
 
 @Component({
   selector: 'app-register-dialog',

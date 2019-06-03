@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject, zip, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Message } from '../models/Message';
 import { ServiceBase } from './serviceBase';
-import { ChatSession } from '../models/chatSession';
+import { ChatSession } from '../models/chat-session';
 import { combineLatest } from 'rxjs/operators';
 import { TrainingsService } from './trainings.service';
 import { CustomAuthService } from './custom-auth.service';
@@ -74,6 +74,7 @@ export class SessionsService extends ServiceBase {
         this.sessions.next(sessions);
       });
 
+      // receive training progress updates
       this.hubConnection.on(this.hubHandlers.groupLeave, (groupName: string) => {
           const sessions = this.sessions.getValue();
           const indx = sessions.findIndex(s => s.name === groupName);

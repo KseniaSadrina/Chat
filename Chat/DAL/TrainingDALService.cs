@@ -8,15 +8,19 @@ using Models.Enums;
 
 namespace Chat.DAL
 {
-  public class TrainingService : ITrainingService
+  public class TrainingDALService : ITrainingDALService
   {
     private readonly ChatContext _context;
     private readonly ISessionsService _sessionsService;
+    private readonly IGoalsService _goalsService;
 
-    public TrainingService(ChatContext context, ISessionsService sessionsService)
+    public TrainingDALService(ChatContext context,
+                              ISessionsService sessionsService,
+                              IGoalsService goals)
     {
       _context = context;
       _sessionsService = sessionsService;
+      _goalsService = goals;
     }
 
     public async Task<DbExecutionStatus> Add(Training training)
@@ -50,7 +54,11 @@ namespace Chat.DAL
           Type = ChannelType.Private,
           TrainingId = training.Id,
           Name = training.Name + new Random().Next()
-      };
+        };
+
+        // Create training goals for this training
+        await _goalsService.CreateTrainingGoals(training.Id, training.Scenario.Id);
+
 
         return await _sessionsService.Add(newSession);
       }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Chat.DAL
 {
-  public interface ITrainingService
+  public interface ITrainingDALService
   {
     Task<DbExecutionStatus> Add(Training training);
 

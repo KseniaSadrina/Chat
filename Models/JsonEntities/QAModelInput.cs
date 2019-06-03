@@ -12,5 +12,8 @@ namespace Models
 
         [JsonProperty("context")]
         public string Context { get; set; }
+
+        [JsonProperty("id")]
+        public int Id { get; set; }
     }
 }

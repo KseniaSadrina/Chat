@@ -26,6 +26,16 @@
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Guides\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <Target Name="Build Angular" Condition="'$(Configuration)'=='Release'" BeforeTargets="Build">
     <Message Text="* * * * * * Building Angular App * * * * * *" Importance="high" />
     <Exec Command="ng build -prod -aot" />

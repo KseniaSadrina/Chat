@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 using Chat.Helpers;
 using Models.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Chat.Services;
 
 namespace Chat.Controllers
 {
@@ -16,13 +17,16 @@ namespace Chat.Controllers
   [Authorize]
   public class TrainingsController : ControllerBase
   {
-    private readonly ITrainingService _trainingService;
+    private readonly ITrainingDALService _trainingService;
     private readonly IHubContext<TrainingHub> _hubContext;
+    private readonly IMockTrainingService _mockService;
+    
 
-    public TrainingsController(ITrainingService trainingService, IHubContext<TrainingHub> hubContext)
+    public TrainingsController(ITrainingDALService trainingService, IMockTrainingService mock,  IHubContext<TrainingHub> hubContext)
     {
       _trainingService = trainingService;
       _hubContext = hubContext;
+      _mockService = mock;
     }
 
     // GET: api/Trainings
@@ -91,6 +95,20 @@ namespace Chat.Controllers
         await _hubContext.Clients.All.SendAsync("add", training);
 
       return result.ConvertToWebAPI<Training>(CreatedAtAction("GetTraining", new { id = training.Id }, training));
+    }
+
+    [HttpPost("mocks/{id}")]
+    public async Task<ActionResult> MockTraining(int id)
+    {
+      if (id < 0) return BadRequest();
+      var result = await _mockService.StartMockTraining(id);
+      return result ? Ok() : StatusCode(500);
+    }
+
+    [HttpGet("mocks")]
+    public ActionResult GetMocks()
+    {
+      return Ok(_mockService.GetAllCurrentMocks());
     }
 
   }

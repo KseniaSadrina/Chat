@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Chat.Configuration;
 using Chat.DAL;
 using Chat.Helpers;
 using Microsoft.AspNetCore.Identity;

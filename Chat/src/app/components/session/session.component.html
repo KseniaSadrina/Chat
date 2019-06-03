@@ -4,7 +4,7 @@
         <div *ngIf="(messages | async) && (messages | async)?.length > 0">
             <ul *ngFor="let message of messages | async; let i = index">
                 <li>
-                    <div class="message p-3"  [class.my-message]="(currentUser | async).userName === message.sender">
+                    <div class="message fade-in p-3"  [class.my-message]="(currentUser | async).userName === message.sender">
                         <div class="message-header">
                             <i *ngIf="message?.senderType !== 1" class="fas fa-user-secret"></i>
                             <i *ngIf="message?.senderType === 1" class="fas fa-robot"></i>

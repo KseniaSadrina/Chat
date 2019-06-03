@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Chat.DAL;
@@ -11,14 +9,14 @@ using Microsoft.AspNetCore.Identity;
 using Models;
 using Models.Enums;
 
-namespace Chat.Marley
+namespace Chat.Services
 {
   public class MarleyService : IBotService
   {
     #region Private Fields
 
     private readonly ISessionsService _sessions;
-    private readonly ITrainingService _trainings;
+    private readonly ITrainingDALService _trainings;
     private readonly INlpService _nlpService;
     private readonly IGuideService _guideService;
     private readonly IGoalsService _goalService;
@@ -41,7 +39,7 @@ namespace Chat.Marley
     public MarleyService(ISessionsService sessionsService,
       UserManager<User> userManager,
       INlpService nlpService,
-      ITrainingService trainingService,
+      ITrainingDALService trainingService,
       IGuideService guideService,
       IGoalsService goalService)
     {
@@ -111,8 +109,10 @@ namespace Chat.Marley
       if (message == null) return null ;
 
       var modelInput = await GenerateModelInput(message);
+      var res = string.Empty;
+      if (modelInput.Context != null)
+        res = _nlpService.AskQuestionAboutContext(modelInput);
 
-      var res = _nlpService.AskQuestionAboutContext(modelInput);
       if (string.IsNullOrEmpty(res))
         res = _botDefaultResponses[BotMessageHandler.Question];
 
@@ -137,7 +137,7 @@ namespace Chat.Marley
     {
       var currentGoal = (await _goalService.GetCurrentGoalBySessionid(message.ChatSessionId))?.Goal;
       var currentGoalContext = _guideService.GetGoalGuide(currentGoal);
-      var modelInput = new QAModelInput() { Context = currentGoalContext?.Description, Question = message.Text };
+      var modelInput = new QAModelInput() { Id = message.Id , Context = currentGoalContext?.Description, Question = message.Text };
       return modelInput;
     }
     #endregion

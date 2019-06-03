@@ -25,6 +25,7 @@ import { SocialLoginModule,
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterDialogComponent } from './components/register/register-dialog/register-dialog.component';
 import { JwtInterceptor } from './helpers/jwt-interceptor';
+import { MockTrainingComponent } from './components/trainings/mock-training/mock-training.component';
 
 
 const config = new AuthServiceConfig([
@@ -56,7 +57,8 @@ const config = new AuthServiceConfig([
     TrainingsComponent,
     LoginDialogComponent,
     RegisterComponent,
-    RegisterDialogComponent
+    RegisterDialogComponent,
+    MockTrainingComponent
   ],
   imports: [
     CustomMaterialModule,

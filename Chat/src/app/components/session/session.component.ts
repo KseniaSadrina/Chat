@@ -3,7 +3,7 @@ import { SessionsService } from 'src/app/services/sessions.service';
 import { Observable, Subscription, of } from 'rxjs';
 import { Message } from 'src/app/models/Message';
 import { FormControl, Validators } from '@angular/forms';
-import { ChatSession } from 'src/app/models/chatSession';
+import { ChatSession } from 'src/app/models/chat-session';
 import { map } from 'rxjs/operators';
 import { CustomAuthService } from 'src/app/services/custom-auth.service';
 import { User } from 'src/app/models/User';

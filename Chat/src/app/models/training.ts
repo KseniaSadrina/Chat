@@ -1,5 +1,5 @@
-import { TrainingState } from './enums/TrainingState';
 import { Scenario } from './Scenario';
+import { TrainingState } from './enums/training-state';
 
 export class Training {
 

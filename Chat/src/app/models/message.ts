@@ -1,4 +1,4 @@
-import { UserType } from './enums/UserType';
+import { UserType } from './enums/user-type';
 
 export class Message {
 

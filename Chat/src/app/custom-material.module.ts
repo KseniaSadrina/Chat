@@ -1,4 +1,9 @@
-import { MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, MatSelectModule } from '@angular/material';
+import { MatButtonModule,
+  MatDialogModule,
+   MatIconModule,
+   MatTooltipModule,
+   MatSelectModule,
+   MatProgressBarModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import { MatListModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
@@ -19,7 +24,8 @@ import { NgModule } from '@angular/core';
     MatSidenavModule,
     MatIconModule,
     MatTooltipModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressBarModule
 ],
   exports: [
     MatInputModule,
@@ -33,7 +39,8 @@ import { NgModule } from '@angular/core';
     MatDialogModule,
     MatIconModule,
     MatTooltipModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressBarModule
 ],
 })
 export class CustomMaterialModule { }

@@ -5,7 +5,7 @@ import { Observable, Subscription, BehaviorSubject,  } from 'rxjs';
 import { Training } from 'src/app/models/Training';
 import { combineLatest, map, switchMap, merge } from 'rxjs/operators';
 import { SessionsService } from 'src/app/services/sessions.service';
-import { ChatSession } from 'src/app/models/chatSession';
+import { ChatSession } from 'src/app/models/chat-session';
 
 @Component({
   selector: 'app-training-details',

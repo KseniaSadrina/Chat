@@ -1,6 +1,9 @@
+using Chat.Configuration;
 using Chat.DAL;
+using Chat.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Models;
 using Models.Enums;
 using System;
@@ -11,18 +14,17 @@ namespace Chat.Hubs
   [Authorize]
   public class TrainingHub: Hub
   {
+    private readonly ITrainingDALService _trainingDALService;
 
-    private readonly ITrainingService _trainingService;
-
-    public TrainingHub(ITrainingService trainingService)
+    public TrainingHub(ITrainingDALService trainingService)
     {
-      _trainingService = trainingService;
+      _trainingDALService = trainingService;
     }
 
     public async Task NotifyAddAll(int trainingCreatorId, Training training)
     {
       Console.WriteLine($"Received training: {training.Name}, {training.Scenario?.Id}, {training?.State}, {training.Scenario?.Name}");
-      var result = await _trainingService.Add(trainingCreatorId, training);
+      var result = await _trainingDALService.Add(trainingCreatorId, training);
 
       // If the addition has succeeded, publish to everybody else that there is a new active training available
       if (result == DbExecutionStatus.Succeeded)
@@ -33,7 +35,7 @@ namespace Chat.Hubs
     {
       if (id != training.Id) return;
 
-      var result = await _trainingService.Update(id, training);
+      var result = await _trainingDALService.Update(id, training);
 
       // If the edit has succeeded, publish to everybody else that there is a a change in a training
       if (result == DbExecutionStatus.Succeeded)

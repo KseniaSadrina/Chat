@@ -10,12 +10,13 @@ using Models;
 using Microsoft.AspNetCore.Identity;
 using Chat.Helpers;
 using Microsoft.Extensions.Logging;
-using Chat.Marley;
+using Chat.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Chat.Services;
 using System.Threading.Tasks;
+using Chat.Configuration;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Chat
 {
@@ -37,20 +38,35 @@ namespace Chat
       services.Configure<TokenConfiguration>(Configuration.GetSection(nameof(TokenConfiguration)));
 
       services.AddDbContext<ChatContext>
-          (options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
+          (options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),ServiceLifetime.Singleton);
+
+      // Background services
+      services.AddTransient<IGoalsService, GoalsService>();
+
+      services.AddSingleton<IMockTrainingService, MockTrainingService>(sp =>
+      {
+        using (var scope = sp.CreateScope())
+        {
+          var context = scope.ServiceProvider.GetService<ChatContext>();
+          var logger = scope.ServiceProvider.GetService<ILogger<GoalsService>>();
+          var goals = new GoalsService(context, logger);
+          var config = Configuration.GetSection(nameof(TrainingMockConfiguration)).Get<TrainingMockConfiguration>();
+          var hub = scope.ServiceProvider.GetService<IHubContext<TrainingHub>>();
+          return new MockTrainingService(goals, config, hub);
+        }
+      });
 
       // Gerneral Services
       services.AddScoped<IAuthenticationService, JWTAuthenticationService>();
-      services.AddScoped<IGoalsService, GoalsService>();
+      services.AddScoped<IGuideService, JsonGuideService>();
 
       // NLP
-      services.AddScoped<INlpService, BertService>();
+      services.AddScoped<INlpService, MnemonicReaderService>();
       services.AddScoped<IBotService, MarleyService>();
 
       // DAL
-      services.AddScoped<ITrainingService, TrainingService>();
+      services.AddScoped<ITrainingDALService, TrainingDALService>();
       services.AddScoped<ISessionsService, SessionService>();
-      services.AddScoped<IGoalsService, GoalsService>();
 
       services.AddMvc();
       ConfigureAuthentication(services);

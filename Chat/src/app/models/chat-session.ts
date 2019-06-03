@@ -1,4 +1,4 @@
-import { SessionType } from './enums/SessionType';
+import { SessionType } from './enums/session-type';
 import { Message } from './Message';
 
 export class ChatSession {

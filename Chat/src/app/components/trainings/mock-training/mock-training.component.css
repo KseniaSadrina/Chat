@@ -1,0 +1,9 @@
+.progress-container {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: center; /* Safari 7.0+ */
+  display: flex;
+  align-items: center;
+}

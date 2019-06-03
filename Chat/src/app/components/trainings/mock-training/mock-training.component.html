@@ -1,0 +1,8 @@
+
+
+<div *ngIf="(currentProgress | async) as progress" class="progress-container d-flex">
+  <button mat-type="button" mat-icon-button [disabled]="progress.isRunning" (click)="startTraining()"  matTooltip="Start Mock Training">
+    <mat-icon class="mat-icon-rtl-mirror"> play_circle_outline</mat-icon>
+  </button>
+  <mat-progress-bar mode="determinate" [value]="progress.value"></mat-progress-bar>
+</div>

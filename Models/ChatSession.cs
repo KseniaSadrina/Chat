@@ -29,8 +29,9 @@ namespace Models
 		[ForeignKey(nameof(Training))]
 		public int TrainingId { get; set; }
 
-		// many to many relationship mapped by a joined table
-		public virtual ICollection<SessionUser> Users { get; set; }
+        [JsonIgnore]
+        // many to many relationship mapped by a joined table
+        public virtual ICollection<SessionUser> Users { get; set; }
 
         [JsonProperty("messages")]
         public virtual ICollection<Message> Messages { get; set; }

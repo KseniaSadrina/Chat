@@ -1,5 +1,5 @@
 using Chat.DAL;
-using Chat.Marley;
+using Chat.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
