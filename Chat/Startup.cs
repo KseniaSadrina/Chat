@@ -139,7 +139,8 @@ namespace Chat
       UserManager<User> userManager,
       RoleManager<Role> roleManager,
       ILogger<Startup> logger,
-      ChatContext dbContext)
+      ChatContext dbContext,
+      IGuideService guideService)
 		{
 			app.Use(async (context, next) => {
 				await next();
@@ -154,6 +155,7 @@ namespace Chat
 
       await roleManager.SeedRoles(logger);
       await userManager.SeedUserRoles(logger);
+      await dbContext.SeedScenarios(guideService, logger);
 
       app.UseAuthentication();
       app.UseCors("MyPolicy");

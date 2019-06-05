@@ -11,7 +11,10 @@ namespace Models
         public string ScenarioName { get; set; }
 
         [JsonProperty("scenario_id")]
-        public string ScenarioId { get; set; }
+        public int ScenarioId { get; set; }
+
+        [JsonProperty("abstract")]
+        public string Abstract { get; set; }
 
         [JsonProperty("goals")]
         public IList<GoalGuide> Goals { get; set; }

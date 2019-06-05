@@ -1,4 +1,5 @@
 using Chat.DAL;
+using Chat.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Models;
@@ -64,6 +65,48 @@ namespace Chat.Helpers
         if (roleManager.FindByNameAsync(roleName).Result == null)
           await roleManager.CreateAsync(new Role { Name = roleName });
       }
+    }
+
+    public static async Task SeedScenarios(this ChatContext context, IGuideService guideService, ILogger logger)
+    {
+      var all = guideService.GetAllScenarioGuide();
+      foreach (var scenarioGuide in all)
+      {
+        logger.LogDebug($"Seeding scenario scenario {scenarioGuide.ScenarioId}");
+        try
+        {
+          var scenario = new Scenario()
+          {
+            Id = scenarioGuide.ScenarioId,
+            Name = scenarioGuide.ScenarioName,
+            Description = scenarioGuide.Abstract
+          };
+          if (context.Scenarios.FirstOrDefault(item => item.Id == scenario.Id) != null )
+            continue;
+          context.Add(scenario);
+          var i = 1;
+          foreach (var goalGuide in scenarioGuide.Goals)
+          {
+            logger.LogDebug($"Seeding scenario scenario {goalGuide.Id}");
+            var goal = new Goal()
+            {
+              Id = goalGuide.Id,
+              Order = i,
+              ScenarioId = scenarioGuide.ScenarioId,
+              Text = goalGuide.GoalName
+            };
+            if (context.Goals.FirstOrDefault(item => item.Id == goal.Id) != null)
+              continue;
+            context.Add(goal);
+            i++;
+          }
+        }
+        catch (Exception ex)
+        {
+          logger.LogError("Failed duering addition of new scenario.", ex);
+        }
+      }
+      await context.SaveChangesAsync();
     }
   }
 }

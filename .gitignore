@@ -11,3 +11,4 @@ Chat/obj/*
 Models/obj/*
 Models/bin/*
 Chat/Chat.db
+.vs/Chat/DesignTimeBuild/.dtbcache

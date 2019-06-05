@@ -13,7 +13,7 @@ namespace Chat.Services
   public class JsonGuideService : IGuideService
   {
     private readonly ILogger<JsonGuideService> _logger;
-    private string _guidesLocation;
+    private string _guidesLocation = "./Guides";
 
     public JsonGuideService(ILogger<JsonGuideService> logger)
     {
@@ -25,7 +25,8 @@ namespace Chat.Services
       try
       {
         _logger.LogInformation($"Serializing scenario guide for scenario {scenarioId}");
-        string guidePath = Path.Combine(_guidesLocation, scenarioId.ToString());
+        var strId = scenarioId.ToString();
+        string guidePath = Path.Combine(_guidesLocation, $"{strId}.json");
         using (var ms = new StreamReader(guidePath))
         {
           // Deserialization from JSON  
@@ -46,6 +47,17 @@ namespace Chat.Services
       if (goal == null) return null;
       var scenario = GetScenarioGuide(goal.ScenarioId);
       return scenario.Goals.FirstOrDefault(g => g.Id == goal.Id);
+    }
+
+    public IEnumerable<ScenarioGuide> GetAllScenarioGuide()
+    {
+      var files = new DirectoryInfo(_guidesLocation).GetFiles("*.json");
+      foreach (var file in files)
+      {
+        var id = int.Parse(file.Name.Split('.')[0]);
+        yield return GetScenarioGuide(id);
+      }
+
     }
   }
 }

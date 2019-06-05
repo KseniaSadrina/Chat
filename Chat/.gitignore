@@ -9,6 +9,9 @@
 
 # dependencies
 /node_modules
+/Guides/*
+/Marley/__pycache__/*
+/Marley/*.mdl
 
 # profiling files
 chrome-profiler-events.json

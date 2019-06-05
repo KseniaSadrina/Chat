@@ -9,5 +9,7 @@ namespace Chat.Services
   public interface IGuideService
   {
     GoalGuide GetGoalGuide(Goal goal);
+
+    IEnumerable<ScenarioGuide> GetAllScenarioGuide();
   }
 }
