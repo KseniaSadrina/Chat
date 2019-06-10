@@ -12,16 +12,55 @@
     height: 90%;
 }
 
+.messages-wrapper {
+  width: 100%;
+  height:100%;
+  grid-row-start: 1;
+  grid-template-rows:  95% 5%;
+  background: black;
+  border-top: 2px solid lime;
+  border-bottom: 2px solid lime;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
 .messages {
-    grid-row-start: 1;
-    overflow-y: auto;
-    width: 100%;
-    height:100%;
-    background: black;
-    color: white;
-    border-top: 2px solid lime;
-    border-bottom: 2px solid lime;
-    padding: 2rem;
+  padding-right: 1rem;
+  width: 100%;
+  height:100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  color: white;
+  grid-row-start: 1;
+}
+
+#scroll-style::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: black;
+}
+
+#scroll-style::-webkit-scrollbar
+{
+    width: 7px;
+    background-color: black;
+}
+
+#scroll-style::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: limegreen;
+}
+
+.typing {
+  margin-top: auto;
+  grid-row-start: 2;
+  color: lightslategray;
+  font-style: italic;
+  justify-content: last;
 }
 
 .text-area {

@@ -58,17 +58,24 @@ namespace Chat.DAL
 
     public async Task<DbExecutionStatus> AddUserToSession(ChatSession session, int userId)
     {
-      if (session == null) return DbExecutionStatus.NotFound;
+      try
+      {
+        if (session == null) return DbExecutionStatus.NotFound;
 
-      // check if this user is alredy registered in this session
-      var mapping = _context.SessionsUsers.Where(us => us.SessionId == session.Id && us.UserId == userId).FirstOrDefault();
-      if (mapping != null) return DbExecutionStatus.Succeeded;
+        // check if this user is alredy registered in this session
+        var mapping = _context.SessionsUsers.Where(us => us.SessionId == session.Id && us.UserId == userId).FirstOrDefault();
+        if (mapping != null) return DbExecutionStatus.Succeeded;
 
-      // else, add mapping
-      _context.SessionsUsers.Add(new SessionUser() { UserId = userId, SessionId = session.Id });
-      await _context.SaveChangesAsync();
+        // else, add mapping
+        _context.SessionsUsers.Add(new SessionUser() { UserId = userId, SessionId = session.Id });
+        await _context.SaveChangesAsync();
 
-      return DbExecutionStatus.Succeeded;
+        return DbExecutionStatus.Succeeded;
+      }
+      catch (Exception ex)
+      {
+        return DbExecutionStatus.Failed;
+      }
     }
 
     public async Task<ChatSession> Get(int id)

@@ -19,7 +19,7 @@ namespace Models
         [ForeignKey(nameof(Scenario))]
         public int ScenarioId { get; set; }
 
-        [JsonProperty("trainingGoals")]
+        [JsonIgnore]
         public virtual IList<TrainingGoal> TrainingGoals { get; set; }
 
         public int Order { get; set; }

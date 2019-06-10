@@ -10,8 +10,8 @@ namespace Models
         [JsonProperty("question")]
         public string Question { get; set; }
 
-        [JsonProperty("context")]
-        public string Context { get; set; }
+        [JsonProperty("contexts")]
+        public IList<string> Contexts { get; set; }
 
         [JsonProperty("id")]
         public int Id { get; set; }

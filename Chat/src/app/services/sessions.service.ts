@@ -23,6 +23,9 @@ export class SessionsService extends ServiceBase {
   private sessions = new BehaviorSubject<ChatSession[]>([]);
   public sessions$ = this.sessions.asObservable();
 
+  private currentTyper = new BehaviorSubject<string>(null);
+  public currentTypes$ = this.currentTyper.asObservable();
+
   constructor(private httpService: HttpClient,
               private trainings: TrainingsService,
               authService: CustomAuthService) {
@@ -32,7 +35,9 @@ export class SessionsService extends ServiceBase {
             group: 'group',
             groupJoin: 'groupJoin',
             groupLeave: 'groupLeave',
-            message: 'message'
+            message: 'message',
+            startTyping: 'startTyping',
+            stoppedTyping: 'stoppedTyping'
           } ,
           []);
   }
@@ -97,6 +102,26 @@ export class SessionsService extends ServiceBase {
         sessions[sessionIndx].messages.push(message);
         this.sessions.next(sessions);
       });
+
+       // receive start typing message
+      this.hubConnection.on(this.hubHandlers.startTyping, (groupName: string, userName: string) => {
+        const currSession = this.currentSession.getValue();
+        console.log(`${userName} is typing`);
+        if (currSession.name === groupName && this.authService.currentUserValue.userName !== userName) {
+          console.log(`${userName} is typing and you should see that`);
+          this.currentTyper.next(userName);
+        }
+      });
+
+        // receive stopped typing message
+      this.hubConnection.on(this.hubHandlers.stoppedTyping, (groupName: string) => {
+          const currSession = this.currentSession.getValue();
+          console.log(`stopped typing`);
+          if (currSession.name === groupName) {
+            this.currentTyper.next(null);
+          }
+        });
+
     }
   }
 

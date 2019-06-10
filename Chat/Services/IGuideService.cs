@@ -8,7 +8,9 @@ namespace Chat.Services
 {
   public interface IGuideService
   {
-    GoalGuide GetGoalGuide(Goal goal);
+    GoalGuide GetGoalGuide(Goal goal, ScenarioGuide scenarioGuide = null);
+
+    ScenarioGuide GetScenarioGuide(int scenarioId);
 
     IEnumerable<ScenarioGuide> GetAllScenarioGuide();
   }

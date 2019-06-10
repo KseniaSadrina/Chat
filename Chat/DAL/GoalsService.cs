@@ -41,15 +41,22 @@ namespace Chat.DAL
 
     public async Task CreateTrainingGoals(int trainingId, int scenarioId)
     {
-      var goals = (from g in _context.Goals
-                   where g.ScenarioId == scenarioId
-                   select new TrainingGoal()
-                   {
-                     TrainingId = trainingId,
-                     GoalId = g.Id,
-                     IsAchieved = false
-                   }).ForEachAsync(item => _context.Add(item));
-      await _context.SaveChangesAsync();
+      try
+      {
+        var goals = (from g in _context.Goals
+                     where g.ScenarioId == scenarioId
+                     select new TrainingGoal()
+                     {
+                       TrainingId = trainingId,
+                       GoalId = g.Id,
+                       IsAchieved = false
+                     }).ForEachAsync(item => _context.Add(item));
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError("Failed creating all training goals: ", ex);
+      }
 
     }
 
@@ -62,7 +69,7 @@ namespace Chat.DAL
                             join tg in _context.TrainingGoals on ts.TrainingId equals tg.TrainingId
                             where ts.Id == sessionId && !tg.IsAchieved
                             orderby tg.Goal.Order
-                            select tg).FirstOrDefaultAsync();
+                            select tg).Include(tg => tg.Goal).FirstOrDefaultAsync();
         _logger.LogInformation($"The current goal is {result}.");
         return result;
       }

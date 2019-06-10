@@ -28,22 +28,25 @@ def main(args):
     with open(args.data_file,encoding='utf-8') as f:
         data = json.load(f)
         for pair in data:
-            context = pair['context']
+            contexts = pair['contexts']
             question = pair['question']
             qaid = pair['id']
             qids.append(qaid)
-            examples.append((context, question))
+            examples.append((contexts, question))
 
     results = {}
     for i in range(0, len(examples)):
-        res = PREDICTOR.predict(examples[i][0], examples[i][1], None, 1)
-        saveable_res = []
+      saveable_res = []
+      for context in examples[i][0]: # run the test for each given context, in the end choose the one with the best score
+        print(context)
+        res = PREDICTOR.predict(context, examples[i][1], None, 1)
         for mini_res in res:
-            pred_out = {}
-            pred_out['answer'] = str(mini_res[0])
-            pred_out['score'] = float(mini_res[1])
-            saveable_res.append(pred_out)
-        results[qids[i]] = saveable_res
+          # save the answer only if it has the highest match
+          pred_out = {}
+          pred_out['answer'] = str(mini_res[0])
+          pred_out['score'] = float(mini_res[1])
+          saveable_res.append(pred_out)
+      results[qids[i]] = saveable_res
     with open(args.output_file, "w") as writer:
         writer.write(json.dumps(results, indent=4) + "\n")
 
@@ -89,4 +92,4 @@ if __name__ == '__main__':
     if args.cuda:
         PREDICTOR.cuda()
     main(args)
-    
+

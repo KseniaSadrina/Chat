@@ -7,6 +7,7 @@ import { ChatSession } from 'src/app/models/chat-session';
 import { map } from 'rxjs/operators';
 import { CustomAuthService } from 'src/app/services/custom-auth.service';
 import { User } from 'src/app/models/User';
+import { type } from 'os';
 
 @Component({
   selector: 'app-session',
@@ -22,6 +23,7 @@ export class SessionComponent implements OnInit, AfterViewChecked {
   message = new FormControl('',  Validators.required);
   currentSession: Observable<ChatSession>;
   currentUser: Observable<User>;
+  typingMessage: Observable<string>;
   messages: Observable<Message[]>;
   subscriptions: Subscription[] = [];
 
@@ -30,12 +32,17 @@ export class SessionComponent implements OnInit, AfterViewChecked {
     this.currentSession = this.sessionsService.currentSession$;
     this.messages = this.currentSession.pipe(
       map(session => {
-        let res: Message[] = [];
-        if (session && session.messages) { res = session.messages; }
+        let res: Message[] = null;
+        if (session && session.messages && session.messages.length > 0) { res = session.messages; }
         return res;
       })
       );
-    }
+
+    this.typingMessage = this.sessionsService.currentTypes$.pipe(
+      map(typer => typer ? `${typer} is typing..` : null)
+    );
+
+  }
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();

@@ -1,28 +1,30 @@
 
-<div class="session-wrapper" [class.blur-me]="!(currentSession | async)">
-    <div class="messages" #scrollMe>
-        <div *ngIf="(messages | async) && (messages | async)?.length > 0">
-            <ul *ngFor="let message of messages | async; let i = index">
-                <li>
-                    <div class="message fade-in p-3"  [class.my-message]="(currentUser | async).userName === message.sender">
-                        <div class="message-header">
-                            <i *ngIf="message?.senderType !== 1" class="fas fa-user-secret"></i>
-                            <i *ngIf="message?.senderType === 1" class="fas fa-robot"></i>
-                            <small> {{message.sender}}:</small>
-                        </div>
-                        <p class="mt-1 mb-1">{{message.text}}</p>
-                        <small class="text-muted"> {{message.timestamp.toLocaleString()}}</small>
+<div class="session-wrapper" [class.blur-me]="!(currentSession | async)" *ngIf="(currentUser | async) as user">
+  <div class="messages-wrapper">
+    <div class="messages" #scrollMe id="scroll-style">
+      <div *ngIf="(messages | async) as msgs; else noMessages">
+        <ul *ngFor="let message of msgs; let i = index">
+            <li>
+                <div class="message fade-in p-3"  [class.my-message]="user.userName === message.sender">
+                    <div class="message-header">
+                        <i *ngIf="message?.senderType !== 1" class="fas fa-user-secret"></i>
+                        <i *ngIf="message?.senderType === 1" class="fas fa-robot"></i>
+                        <small> {{message.sender}}:</small>
                     </div>
-                </li>
-            </ul>
-        </div>
-        <div *ngIf="(!(messages | async) || (messages | async)?.length <= 0)" >
-            <span>No messages here..</span>
-            <i class="fas fa-frown-open ml-2"></i>
-        </div>
+                    <p class="mt-1 mb-1">{{message.text}}</p>
+                    <small class="text-muted"> {{message.timestamp.toLocaleString()}}</small>
+                </div>
+            </li>
+        </ul>
+      </div>
+      <ng-template #noMessages>
+        <span>No messages here..</span>
+        <i class="fas fa-frown-open ml-2"></i>
+      </ng-template>
     </div>
-
-    <div *ngIf="(currentUser | async) as user" class="form-group row sticky-div text-area p-3">
+    <div class="typing" *ngIf="typingMessage | async as tmsg"> {{tmsg}} </div>
+  </div>
+    <div class="form-group row sticky-div text-area p-3">
         <textarea class="form-control message-text-box ml-4" placeholder="Your Message.." rows="2" [formControl]="message" (keydown.enter)="sendMessage(user);false"></textarea>
         <button class="mt-4" mat-icon-button mat-type="button" (click)="sendMessage(user)" [disabled]="!message.valid" matTooltip="Send">
             <mat-icon class="mat-icon-rtl-mirror">send</mat-icon>

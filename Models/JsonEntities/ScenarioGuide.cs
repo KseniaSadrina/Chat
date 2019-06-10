@@ -13,6 +13,9 @@ namespace Models
         [JsonProperty("scenario_id")]
         public int ScenarioId { get; set; }
 
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
         [JsonProperty("abstract")]
         public string Abstract { get; set; }
 

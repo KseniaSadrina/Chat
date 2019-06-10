@@ -110,7 +110,7 @@ namespace Chat.Services
 
       var modelInput = await GenerateModelInput(message);
       var res = string.Empty;
-      if (modelInput.Context != null)
+      if (modelInput != null && modelInput.Contexts != null && modelInput.Contexts.Count > 0)
         res = _nlpService.AskQuestionAboutContext(modelInput);
 
       if (string.IsNullOrEmpty(res))
@@ -136,8 +136,16 @@ namespace Chat.Services
     private async Task<QAModelInput> GenerateModelInput(Message message)
     {
       var currentGoal = (await _goalService.GetCurrentGoalBySessionid(message.ChatSessionId))?.Goal;
-      var currentGoalContext = _guideService.GetGoalGuide(currentGoal);
-      var modelInput = new QAModelInput() { Id = message.Id , Context = currentGoalContext?.Description, Question = message.Text };
+      if (currentGoal == null) return null;
+      var currentScenarioGuide = _guideService.GetScenarioGuide(currentGoal.ScenarioId);
+      var currentGoalGuide = _guideService.GetGoalGuide(currentGoal);
+      var contexts = new List<string>
+      {
+        currentGoalGuide.Description,
+        currentScenarioGuide.Abstract
+      };
+
+      var modelInput = new QAModelInput() { Id = message.Id , Contexts = contexts, Question = message.Text };
       return modelInput;
     }
     #endregion

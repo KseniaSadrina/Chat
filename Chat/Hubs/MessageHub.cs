@@ -118,8 +118,8 @@ namespace Chat.Hubs
       _logger.LogInformation($"User started/stopped typing: {userName}, stopped: {stopped}");
 
       if (!stopped)
-        await Clients.Groups(sessionName).SendAsync("startTyping", userName);
-      else await Clients.Groups(sessionName).SendAsync("stoppedTyping", userName);
+        await Clients.Groups(sessionName).SendAsync("startTyping", sessionName, userName);
+      else await Clients.Groups(sessionName).SendAsync("stoppedTyping", sessionName);
 
     }
 

@@ -9,14 +9,19 @@
 .chat {
   height: 100%;
   display: grid;
-  grid-template-rows: 95% auto;
+  grid-template-rows: 92% auto;
   background: white;
 }
 
 .sidenav {
   width: 21%;
+  overflow: hidden;
 }
 
 .mock-container {
   border-top: 1px solid lightgray;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+

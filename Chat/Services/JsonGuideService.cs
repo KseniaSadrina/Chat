@@ -41,12 +41,13 @@ namespace Chat.Services
       }
     }
 
-    public GoalGuide GetGoalGuide(Goal goal)
+    public GoalGuide GetGoalGuide(Goal goal, ScenarioGuide scenarioGuide = null)
     {
       _logger.LogInformation($"Getting goal guide for scenario {goal?.Id}");
       if (goal == null) return null;
-      var scenario = GetScenarioGuide(goal.ScenarioId);
-      return scenario.Goals.FirstOrDefault(g => g.Id == goal.Id);
+      if (scenarioGuide == null)
+        scenarioGuide = GetScenarioGuide(goal.ScenarioId);
+      return scenarioGuide.Goals.FirstOrDefault(g => g.Id == goal.Id);
     }
 
     public IEnumerable<ScenarioGuide> GetAllScenarioGuide()

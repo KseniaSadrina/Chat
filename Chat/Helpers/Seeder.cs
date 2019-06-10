@@ -79,7 +79,7 @@ namespace Chat.Helpers
           {
             Id = scenarioGuide.ScenarioId,
             Name = scenarioGuide.ScenarioName,
-            Description = scenarioGuide.Abstract
+            Description = scenarioGuide.Description
           };
           if (context.Scenarios.FirstOrDefault(item => item.Id == scenario.Id) != null )
             continue;
