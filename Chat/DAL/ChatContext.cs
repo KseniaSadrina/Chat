@@ -51,32 +51,6 @@ namespace Chat.DAL
         .HasOne(tg => tg.Goal)
         .WithMany(g => g.TrainingGoals)
         .HasForeignKey(sc => sc.GoalId);
-
-      Seed(modelBuilder);
-    }
-
-    private void Seed(ModelBuilder modelBuilder)
-    {
-     // modelBuilder.Entity<Scenario>().HasData(
-     //    new Scenario
-     //    {
-     //      Id = 1,
-     //      Name = "SQLInjection",
-     //      Description = "SQL injection is a code injection technique that might destroy your database.SQL injection is one of the most common web hacking techniques.SQL injection is the placement of malicious code in SQL statements, via web page input."
-     //    },
-     //     new Scenario
-     //     {
-     //       Id = 2,
-     //       Name = "Apache Shutdown",
-     //       Description = "Slowloris is a type of denial of service attack tool invented by Robert 'RSnake' Hansen which allows a single machine to take down another machine's web server with minimal bandwidth and side effects on unrelated services and ports."
-     //     },
-     //      new Scenario
-     //      {
-     //        Id = 3,
-     //        Name = "Trojan",
-     //        Description = "Any malicious computer program which misleads users of its true intent. The term is derived from the Ancient Greek story of the deceptive wooden horse that led to the fall of the city of."
-     //      }
-     //);
     }
 
     public DbSet<ChatSession> ChatSessions { get; set; }

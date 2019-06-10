@@ -30,8 +30,6 @@ namespace Chat.Services
     /// </summary>
     /// <returns></returns>
     User CurrentBot { get; set; }
-    
 
-    
   }
 }

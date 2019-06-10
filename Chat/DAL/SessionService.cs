@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Chat.Helpers;
+using Chat.Services;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Enums;
@@ -24,6 +25,20 @@ namespace Chat.DAL
       {
         _context.ChatSessions.Add(session);
         await _context.SaveChangesAsync();
+
+        var strMsg = "Hi there, my name is Marley and I'm here to help you. You can ask me questions by using the @marley  tag before the question. If you have a general question about the current training use the #abstract or #general tags before the question. Otherwise, no extra tags are needed and the answer to your question will be a hint based on your progress.";
+        var firstMessage = new Message
+        {
+          Sender = Consts.MARLEYNAME,
+          Text = strMsg,
+          ChatSessionId = session.Id,
+          SessionName = session.Name,
+          TimeStamp = DateTime.Now,
+          SenderType = UserType.Bot
+        };
+        _context.Messages.Add(firstMessage);
+        await _context.SaveChangesAsync();
+
         return DbExecutionStatus.Succeeded;
       }
       catch (Exception ex)

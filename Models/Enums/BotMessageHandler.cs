@@ -8,6 +8,8 @@ namespace Models.Enums
     {
         None,
         Greeting,
-        Question
+        Question,
+        Network,
+        Abstract
     }
 }

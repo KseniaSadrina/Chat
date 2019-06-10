@@ -26,6 +26,14 @@ namespace Chat.Services
     {
       "hi", "hello", "hey", "how do you do", "goodmorning", "goodafternoon", "goodevening"
     };
+    private readonly IList<string> _networkWords = new List<string>()
+    {
+      "#network", "#net"
+    };
+    private readonly IList<string> _abstractWords = new List<string>()
+    {
+      "#abstract", "#general"
+    };
     private readonly Dictionary<BotMessageHandler, string> _botDefaultResponses = new Dictionary<BotMessageHandler, string>
     {
       { BotMessageHandler.Greeting, "Hi there!" },
@@ -76,7 +84,8 @@ namespace Chat.Services
         case BotMessageHandler.Greeting:
           return SayHello(message.ChatSessionId, message.SessionName);
         case BotMessageHandler.Question:
-          return await AnswerQuestion(message);
+        case BotMessageHandler.Abstract:
+          return await AnswerQuestion(message, handlerType);
         case BotMessageHandler.None:
         default:
           return null;
@@ -88,6 +97,12 @@ namespace Chat.Services
     {
       var messageText = message.Text.ToLower().Replace(" ", ""); // sort of tokenize this message
       var lowerBotName = CurrentBot.UserName.ToLower();
+
+      if (_abstractWords.Any(word => messageText.Contains(word)))
+        return (true, BotMessageHandler.Abstract);
+
+      if (_networkWords.Any(word => messageText.Contains(word)))
+        return (true, BotMessageHandler.Network);
 
       if (_greetingWords.Any(word => messageText.Contains(word)))
         return (true, BotMessageHandler.Greeting);
@@ -104,11 +119,11 @@ namespace Chat.Services
 
     private Message SayHello(int sessionId, string sessionName) => GenerateMessage(sessionId, sessionName, _botDefaultResponses[BotMessageHandler.Greeting]);
 
-    private async Task<Message> AnswerQuestion(Message message)
+    private async Task<Message> AnswerQuestion(Message message, BotMessageHandler handler)
     {
       if (message == null) return null ;
+      var modelInput = await GenerateModelInput(message, handler);
 
-      var modelInput = await GenerateModelInput(message);
       var res = string.Empty;
       if (modelInput != null && modelInput.Contexts != null && modelInput.Contexts.Count > 0)
         res = _nlpService.AskQuestionAboutContext(modelInput);
@@ -133,21 +148,22 @@ namespace Chat.Services
 
     }
 
-    private async Task<QAModelInput> GenerateModelInput(Message message)
+    private async Task<QAModelInput> GenerateModelInput(Message message, BotMessageHandler handler)
     {
       var currentGoal = (await _goalService.GetCurrentGoalBySessionid(message.ChatSessionId))?.Goal;
       if (currentGoal == null) return null;
-      var currentScenarioGuide = _guideService.GetScenarioGuide(currentGoal.ScenarioId);
       var currentGoalGuide = _guideService.GetGoalGuide(currentGoal);
-      var contexts = new List<string>
-      {
-        currentGoalGuide.Description,
-        currentScenarioGuide.Abstract
-      };
+      var contexts = new List<string>();
+      if (handler == BotMessageHandler.Abstract) {
+        var currentScenarioGuide = _guideService.GetScenarioGuide(currentGoal.ScenarioId);
+        contexts.Add(currentScenarioGuide.Abstract);
+      } else
+        contexts.Add(currentGoalGuide.Description);
 
       var modelInput = new QAModelInput() { Id = message.Id , Contexts = contexts, Question = message.Text };
       return modelInput;
     }
+
     #endregion
   }
 }
