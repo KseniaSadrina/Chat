@@ -98,17 +98,15 @@ namespace Chat.Services
       var messageText = message.Text.ToLower().Replace(" ", ""); // sort of tokenize this message
       var lowerBotName = CurrentBot.UserName.ToLower();
 
-      if (_abstractWords.Any(word => messageText.Contains(word)))
-        return (true, BotMessageHandler.Abstract);
-
-      if (_networkWords.Any(word => messageText.Contains(word)))
-        return (true, BotMessageHandler.Network);
-
       if (_greetingWords.Any(word => messageText.Contains(word)))
         return (true, BotMessageHandler.Greeting);
 
       if (CurrentBot != null && messageText.Contains(String.Join("", "@", lowerBotName)))
+      {
+        if (_abstractWords.Any(word => messageText.Contains(word)))
+          return (true, BotMessageHandler.Abstract);
         return (true, BotMessageHandler.Question);
+      }
 
       return (false, BotMessageHandler.None);
     }

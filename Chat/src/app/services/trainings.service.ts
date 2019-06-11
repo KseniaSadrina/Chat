@@ -71,12 +71,13 @@ export class TrainingsService extends ServiceBase {
         this.trainings.next(arr);
       });
 
-      this.hubConnection.on(this.hubHandlers.progress, (trainingId: number, progress: number) => {
+      this.hubConnection.on(this.hubHandlers.progress, (trainingId: number, progress: number, currentGoal: number) => {
         const val = this.trainingsProgress.getValue();
-        const updatedProgress =  { value: 100, isRunning: false };
+        const updatedProgress =  { value: 100, isRunning: false, currentGoal: 1 };
         if (progress < 100) {
           updatedProgress.isRunning = true;
           updatedProgress.value = progress;
+          updatedProgress.currentGoal = currentGoal;
         }
         val[trainingId] = updatedProgress;
         this.trainingsProgress.next(val);
@@ -84,7 +85,7 @@ export class TrainingsService extends ServiceBase {
 
       this.hubConnection.on(this.hubHandlers.finished, (trainingId: number) => {
         const val = this.trainingsProgress.getValue();
-        const updatedProgress =  { value: 0, isRunning: false };
+        const updatedProgress =  { value: 0, isRunning: false, currentGoal: 1};
         val[trainingId] = updatedProgress;
         this.trainingsProgress.next(val);
       });
@@ -151,7 +152,7 @@ export class TrainingsService extends ServiceBase {
 
   public generateMock(trainingId: number): void {
     const val = this.trainingsProgress.getValue();
-    val[trainingId] = { value: 0, isRunning: false };
+    val[trainingId] = { value: 0, isRunning: false, currentGoal: 1};
     this.trainingsProgress.next(val);
   }
 }

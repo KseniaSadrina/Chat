@@ -24,14 +24,17 @@ namespace Chat.Services
     private ConcurrentDictionary<int, TrainingMock> _mockedTrainings = new ConcurrentDictionary<int, TrainingMock>();
     private TrainingMockConfiguration _config;
     private IHubContext<TrainingHub> _hubContext;
+    private ILogger<MockTrainingService> _logger;
 
     public MockTrainingService(IGoalsService goals,
                                TrainingMockConfiguration config,
-                               IHubContext<TrainingHub> hubContext)
+                               IHubContext<TrainingHub> hubContext,
+                               ILogger<MockTrainingService> logger)
     {
       _goalsService = goals;
       _config = config;
       _hubContext = hubContext;
+      _logger = logger;
     }
 
     public async Task<bool> StartMockTraining(int trainingId)
@@ -87,12 +90,13 @@ namespace Chat.Services
         if (DateTime.Now < trainingMock.EndTime)
         {
           trainingMock.Progress = CalculateRemainingProgress(trainingMock.EndTime);
-            await _hubContext.Clients.All.SendAsync("progress", trainingId, trainingMock.Progress);
           if (ShouldAchiveNext(trainingMock))
           {
+            
             var achieved = await _goalsService.AchieveNextTrainingGoal(trainingId);
             trainingMock.AchievedGoals = achieved;
           }
+          await _hubContext.Clients.All.SendAsync("progress", trainingId, trainingMock.Progress, trainingMock.AchievedGoals);
         }
         else
         {
@@ -108,15 +112,19 @@ namespace Chat.Services
     {
       // calculate the goal that should be marked as achieved now and return true/false
       var expected = ((float)trainingMock.Progress / 100) * trainingMock.TotalGoals;
-      return expected <= trainingMock.AchievedGoals;
+      _logger.LogInformation($"progress: {trainingMock.Progress}; total goals: {trainingMock.TotalGoals} expected: {expected}");
+      var result = expected >= trainingMock.AchievedGoals;
+      _logger.LogInformation($"should achieve next: {result}");
+      return result;
     }
 
     private int CalculateRemainingProgress(DateTime end)
     {
       var current = (end - DateTime.Now).TotalSeconds; // the time that has passed
       var total = _config.Duration.TotalSeconds;
-      return (100 - (int)Math.Round((current * 100) / total));
-
+      var remaining = (100 - (int)Math.Round((current * 100) / total));
+      _logger.LogInformation($"The time theat has passed: {current} remaining time: {remaining} total: {total}");
+      return remaining;
     }
 
     public IDictionary<int, int> GetAllCurrentMocks()

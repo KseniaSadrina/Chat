@@ -52,7 +52,8 @@ namespace Chat
           var goals = new GoalsService(context, logger);
           var config = Configuration.GetSection(nameof(TrainingMockConfiguration)).Get<TrainingMockConfiguration>();
           var hub = scope.ServiceProvider.GetService<IHubContext<TrainingHub>>();
-          return new MockTrainingService(goals, config, hub);
+          var mockLogger = scope.ServiceProvider.GetService<ILogger<MockTrainingService>>();
+          return new MockTrainingService(goals, config, hub, mockLogger);
         }
       });
 

@@ -38,14 +38,17 @@ def main(args):
     for i in range(0, len(examples)):
       saveable_res = []
       for context in examples[i][0]: # run the test for each given context, in the end choose the one with the best score
-        print(context)
-        res = PREDICTOR.predict(context, examples[i][1], None, 1)
-        for mini_res in res:
-          # save the answer only if it has the highest match
-          pred_out = {}
-          pred_out['answer'] = str(mini_res[0])
-          pred_out['score'] = float(mini_res[1])
-          saveable_res.append(pred_out)
+        split_context = context.split('.')
+        for sentence in split_context:
+          if (sentence == '' or sentence == None):
+            continue
+          res = PREDICTOR.predict(sentence, examples[i][1], None, 1)
+          for mini_res in res:
+            # save the answer only if it has the highest match
+            pred_out = {}
+            pred_out['answer'] = str(mini_res[0])
+            pred_out['score'] = float(mini_res[1])
+            saveable_res.append(pred_out)
       results[qids[i]] = saveable_res
     with open(args.output_file, "w") as writer:
         writer.write(json.dumps(results, indent=4) + "\n")

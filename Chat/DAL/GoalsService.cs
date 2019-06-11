@@ -33,7 +33,7 @@ namespace Chat.DAL
       }
       catch (Exception ex)
       {
-        _logger.LogError("An exception was thrown: ", ex);
+        _logger.LogError("An exception was thrown during achieving training goal: ", ex);
         return 0;
       }
 
@@ -88,7 +88,7 @@ namespace Chat.DAL
         var result = await (from tg in _context.TrainingGoals
                             where tg.TrainingId == trainingId && !tg.IsAchieved
                             orderby tg.Goal.Order
-                            select tg).FirstOrDefaultAsync();
+                            select tg).Include(g => g.Goal).FirstOrDefaultAsync();
         _logger.LogInformation($"The current goal is {result}.");
         return result;
       }

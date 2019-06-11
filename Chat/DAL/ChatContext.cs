@@ -35,7 +35,6 @@ namespace Chat.DAL
       modelBuilder.Entity<SessionUser>().HasKey(sc => new { sc.SessionId, sc.UserId });
       modelBuilder.Entity<TrainingGoal>().HasKey(sc => new { sc.TrainingId, sc.GoalId });
       modelBuilder.Entity<Salt>().HasKey(s => new { s.UserId });
-
       modelBuilder.Entity<SessionUser>()
         .HasOne(sc => sc.Session)
         .WithMany(s => s.Users)
