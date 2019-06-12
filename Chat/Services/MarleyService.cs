@@ -24,7 +24,7 @@ namespace Chat.Services
 
     private readonly IList<string> _greetingWords = new List<string>()
     {
-      "hi", "hello", "hey", "how do you do", "goodmorning", "goodafternoon", "goodevening"
+      "hi ", "hello ", "hey ", "how do you do", "goodmorning", "goodafternoon", "goodevening"
     };
     private readonly IList<string> _networkWords = new List<string>()
     {
@@ -98,13 +98,12 @@ namespace Chat.Services
       var messageText = message.Text.ToLower().Replace(" ", ""); // sort of tokenize this message
       var lowerBotName = CurrentBot.UserName.ToLower();
 
-      if (_greetingWords.Any(word => messageText.Contains(word)))
-        return (true, BotMessageHandler.Greeting);
-
       if (CurrentBot != null && messageText.Contains(String.Join("", "@", lowerBotName)))
       {
         if (_abstractWords.Any(word => messageText.Contains(word)))
           return (true, BotMessageHandler.Abstract);
+        if (_greetingWords.Any(word => messageText.Contains(word)))
+          return (true, BotMessageHandler.Greeting);
         return (true, BotMessageHandler.Question);
       }
 
