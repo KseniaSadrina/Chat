@@ -8,13 +8,13 @@ using Models.Enums;
 
 namespace Chat.DAL
 {
-  public class TrainingDALService : ITrainingDALService
+  public class TrainingService : ITrainingService
   {
     private readonly ChatContext _context;
     private readonly ISessionsService _sessionsService;
     private readonly IGoalsService _goalsService;
 
-    public TrainingDALService(ChatContext context,
+    public TrainingService(ChatContext context,
                               ISessionsService sessionsService,
                               IGoalsService goals)
     {

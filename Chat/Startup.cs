@@ -66,7 +66,7 @@ namespace Chat
       services.AddScoped<IBotService, MarleyService>();
 
       // DAL
-      services.AddScoped<ITrainingDALService, TrainingDALService>();
+      services.AddScoped<ITrainingService, TrainingService>();
       services.AddScoped<ISessionsService, SessionService>();
 
       services.AddMvc();

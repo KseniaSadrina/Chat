@@ -16,7 +16,7 @@ namespace Chat.Services
     #region Private Fields
 
     private readonly ISessionsService _sessions;
-    private readonly ITrainingDALService _trainings;
+    private readonly ITrainingService _trainings;
     private readonly INlpService _nlpService;
     private readonly IGuideService _guideService;
     private readonly IGoalsService _goalService;
@@ -47,7 +47,7 @@ namespace Chat.Services
     public MarleyService(ISessionsService sessionsService,
       UserManager<User> userManager,
       INlpService nlpService,
-      ITrainingDALService trainingService,
+      ITrainingService trainingService,
       IGuideService guideService,
       IGoalsService goalService)
     {

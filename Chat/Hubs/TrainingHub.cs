@@ -14,9 +14,9 @@ namespace Chat.Hubs
   [Authorize]
   public class TrainingHub: Hub
   {
-    private readonly ITrainingDALService _trainingDALService;
+    private readonly ITrainingService _trainingDALService;
 
-    public TrainingHub(ITrainingDALService trainingService)
+    public TrainingHub(ITrainingService trainingService)
     {
       _trainingDALService = trainingService;
     }

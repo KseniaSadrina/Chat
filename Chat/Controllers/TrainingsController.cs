@@ -17,12 +17,12 @@ namespace Chat.Controllers
   [Authorize]
   public class TrainingsController : ControllerBase
   {
-    private readonly ITrainingDALService _trainingService;
+    private readonly ITrainingService _trainingService;
     private readonly IHubContext<TrainingHub> _hubContext;
     private readonly IMockTrainingService _mockService;
     
 
-    public TrainingsController(ITrainingDALService trainingService, IMockTrainingService mock,  IHubContext<TrainingHub> hubContext)
+    public TrainingsController(ITrainingService trainingService, IMockTrainingService mock,  IHubContext<TrainingHub> hubContext)
     {
       _trainingService = trainingService;
       _hubContext = hubContext;

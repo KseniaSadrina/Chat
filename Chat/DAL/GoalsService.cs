@@ -25,6 +25,9 @@ namespace Chat.DAL
       {
         _logger.LogInformation($"Achieving goal the next goal of training {trainingId}");
         var goal = await GetCurrentGoalByTrainingId(trainingId);
+
+        // in case there is nothing to achieve anymore
+        if (goal == null) return await GetTotalGoalsCount(trainingId);
         goal.IsAchieved = true;
         _context.Update(goal);
         await _context.SaveChangesAsync();
@@ -33,7 +36,7 @@ namespace Chat.DAL
       }
       catch (Exception ex)
       {
-        _logger.LogError("An exception was thrown during achieving training goal: ", ex);
+        _logger.LogError(ex, "An exception was thrown during achieving training goal.");
         return 0;
       }
 
@@ -55,7 +58,7 @@ namespace Chat.DAL
       }
       catch (Exception ex)
       {
-        _logger.LogError("Failed creating all training goals: ", ex);
+        _logger.LogError(ex, "Failed creating all training goals: ");
       }
 
     }
@@ -75,7 +78,7 @@ namespace Chat.DAL
       }
       catch (Exception ex)
       {
-        _logger.LogError("An exception was thrown: ", ex);
+        _logger.LogError(ex, "An exception was thrown: ");
         return null;
       }
     }
@@ -94,7 +97,7 @@ namespace Chat.DAL
       }
       catch (Exception ex)
       {
-        _logger.LogError("An exception was thrown: ", ex);
+        _logger.LogError(ex, "An exception was thrown: ");
         return null;
       }
 
@@ -113,7 +116,7 @@ namespace Chat.DAL
       }
       catch (Exception ex)
       {
-        _logger.LogError("An exception was thrown: ", ex);
+        _logger.LogError(ex, "An exception was thrown: ");
         return 0;
       }
     }
@@ -131,7 +134,7 @@ namespace Chat.DAL
       }
       catch (Exception ex)
       {
-        _logger.LogError("An exception was thrown: ", ex);
+        _logger.LogError(ex, "An exception was thrown: ");
       }
 
     }

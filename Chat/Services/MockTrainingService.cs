@@ -41,14 +41,17 @@ namespace Chat.Services
     {
       // count total goals to achieve
       var totalGoals = await _goalsService.GetTotalGoalsCount(trainingId);
+      // verify that there is no need to perform cleanup, else, unachieve all
+      var current = await _goalsService.GetCurrentGoalByTrainingId(trainingId);
+      if (current == null || current.Goal.Order > 1)
+        await _goalsService.UnAchieveAllTrainingGoals(trainingId);
       // create the task
       var tokenSource = new CancellationTokenSource();
       var token = tokenSource.Token;
       var task = new Task(() => MockTraining(trainingId, tokenSource), token, TaskCreationOptions.LongRunning);
-
+      
       var mock = new TrainingMock() { EndTime = DateTime.Now + _config.Duration, Progress = 0, TotalGoals = totalGoals, AchievedGoals = 0 };
       var didSucceeded = _mockedTrainings.TryAdd(trainingId, mock);
-
       // check if the the mock isn't already running
       if (didSucceeded) task.Start();
       else if (task != null) task.Dispose();
@@ -67,7 +70,13 @@ namespace Chat.Services
         var withTimer = current.Clone() as TrainingMock;
         withTimer.TrainingTimer = trainingTimer;
         if (_mockedTrainings.TryUpdate(trainingId, withTimer, current)) trainingTimer.Start();
-        else trainingTimer.Dispose();
+        else
+        {
+          trainingTimer.Dispose();
+          // in case we failed for a wierd reason, there is no need to keep the current task alive.
+          if (current.TrainingTimer == null)
+            OnMockStop(trainingId, token);
+        }
       }
     }
 
@@ -80,6 +89,7 @@ namespace Chat.Services
       if (!token.IsCancellationRequested)
         token.Cancel();
 
+      _logger.LogInformation($"Sending all clients info about finishing training mock {trainingId}");
       await _hubContext.Clients.All.SendAsync("finishedMock", trainingId);
     }
 
@@ -92,7 +102,6 @@ namespace Chat.Services
           trainingMock.Progress = CalculateRemainingProgress(trainingMock.EndTime);
           if (ShouldAchiveNext(trainingMock))
           {
-            
             var achieved = await _goalsService.AchieveNextTrainingGoal(trainingId);
             trainingMock.AchievedGoals = achieved;
           }
@@ -120,11 +129,12 @@ namespace Chat.Services
 
     private int CalculateRemainingProgress(DateTime end)
     {
-      var current = (end - DateTime.Now).TotalSeconds; // the time that has passed
-      var total = _config.Duration.TotalSeconds;
-      var remaining = (100 - (int)Math.Round((current * 100) / total));
-      _logger.LogInformation($"The time theat has passed: {current} remaining time: {remaining} total: {total}");
-      return remaining;
+      var remainingTime = (end - DateTime.Now).TotalSeconds; // the time that has passed
+      var totalSeconds = _config.Duration.TotalSeconds;
+      var remainingProgress = (int)Math.Round((remainingTime * 100) / totalSeconds);
+      var currentProgress = (100 - remainingProgress);
+      _logger.LogInformation($"The time that has passed: {remainingTime} current progress: {currentProgress}, remaining progress: {remainingProgress} total: {totalSeconds}");
+      return currentProgress;
     }
 
     public IDictionary<int, int> GetAllCurrentMocks()
