@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { SessionsService } from 'src/app/services/sessions.service';
 import { Observable, Subscription, of } from 'rxjs';
 import { Message } from 'src/app/models/Message';
@@ -12,9 +12,11 @@ import { type } from 'os';
 @Component({
   selector: 'app-session',
   templateUrl: './session.component.html',
-  styleUrls: ['./session.component.css']
+  styleUrls: ['./session.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionComponent implements OnInit, AfterViewChecked {
+  disableScrollDown: any;
 
   constructor(private sessionsService: SessionsService,
               private auth: CustomAuthService) { }
@@ -33,7 +35,10 @@ export class SessionComponent implements OnInit, AfterViewChecked {
     this.messages = this.currentSession.pipe(
       map(session => {
         let res: Message[] = null;
-        if (session && session.messages && session.messages.length > 0) { res = session.messages; }
+        if (session && session.messages && session.messages.length > 0) {
+          res = session.messages;
+          this.disableScrollDown = false;
+        }
         return res;
       })
       );
@@ -41,7 +46,6 @@ export class SessionComponent implements OnInit, AfterViewChecked {
     this.typingMessage = this.sessionsService.currentTypes$.pipe(
       map(typer => typer ? `${typer} is typing..` : null)
     );
-
   }
 
   ngAfterViewChecked(): void {
@@ -59,11 +63,22 @@ export class SessionComponent implements OnInit, AfterViewChecked {
     this.message.markAsPristine();
   }
 
+  private onScroll() {
+    const element = this.myScrollContainer.nativeElement;
+    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+    if (this.disableScrollDown && atBottom) {
+        this.disableScrollDown = false;
+    } else {
+        this.disableScrollDown = true;
+    }
+  }
+
   scrollToBottom(): void {
+    if (this.disableScrollDown) {
+      return;
+    }
     try {
       this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-    } catch (err) {
-
-    }
+    } catch (err) { }
   }
 }

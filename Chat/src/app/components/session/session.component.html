@@ -1,7 +1,7 @@
 
 <div class="session-wrapper" [class.blur-me]="!(currentSession | async)" *ngIf="(currentUser | async) as user">
   <div class="messages-wrapper">
-    <div class="messages" #scrollMe id="scroll-style">
+    <div class="messages" #scrollMe (scroll)="onScroll()" id="scroll-style">
       <div *ngIf="(messages | async) as msgs; else noMessages">
         <ul *ngFor="let message of msgs; let i = index">
             <li>
