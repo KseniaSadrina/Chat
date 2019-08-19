@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, ChangeDetectionStrategy, Input } from '@angular/core';
 import { SessionsService } from 'src/app/services/sessions.service';
 import { Observable, Subscription, of } from 'rxjs';
 import { Message } from 'src/app/models/Message';
 import { FormControl, Validators } from '@angular/forms';
 import { ChatSession } from 'src/app/models/chat-session';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { CustomAuthService } from 'src/app/services/custom-auth.service';
 import { User } from 'src/app/models/User';
-import { type } from 'os';
 
 @Component({
   selector: 'app-session',
@@ -28,6 +27,13 @@ export class SessionComponent implements OnInit, AfterViewChecked {
   typingMessage: Observable<string>;
   messages: Observable<Message[]>;
   subscriptions: Subscription[] = [];
+  myControl = new FormControl();
+  tags: string[] = [
+    '@Marley',
+    '#abstract'
+  ];
+  filteredTags: Observable<string[]>;
+
 
   ngOnInit() {
     this.currentUser = this.auth.currentUser$;
@@ -41,11 +47,21 @@ export class SessionComponent implements OnInit, AfterViewChecked {
         }
         return res;
       })
-      );
-
+    );
+    this.filteredTags = this.message.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
     this.typingMessage = this.sessionsService.currentTypes$.pipe(
       map(typer => typer ? `${typer} is typing..` : null)
     );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tags.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   ngAfterViewChecked(): void {

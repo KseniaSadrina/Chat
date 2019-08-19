@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { User } from 'src/app/models/User';
 import { AddTrainingComponent } from '../add-training/add-training.component';
 import { CustomAuthService } from 'src/app/services/custom-auth.service';
+import { SessionsService } from 'src/app/services/sessions.service';
 
 export const DIALOG = 'dialog';
 export const SERVICE = 'service';
@@ -19,9 +20,11 @@ export class TrainingsListComponent implements OnInit {
 
   constructor(private trainingsService: TrainingsService,
               private authService: CustomAuthService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              public sessions: SessionsService) { }
 
   public trainings: Observable<Training[]>;
+  public unreadMessages: Observable<{ [trainingId: number]: number }>;
   public selectedId: Observable<number>;
   public title = 'Trainings';
   public user: Observable<User>;
@@ -30,6 +33,10 @@ export class TrainingsListComponent implements OnInit {
     this.trainings = this.trainingsService.trainings$;
     this.selectedId = this.trainingsService.currentIndex$;
     this.user = this.authService.currentUser$;
+    this.unreadMessages = this.sessions.unreadMessages$;
+    this.unreadMessages.subscribe(res => {
+      console.log(res);
+    });
   }
 
   openDialog(): void {

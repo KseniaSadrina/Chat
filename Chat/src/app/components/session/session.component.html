@@ -25,9 +25,14 @@
     <div class="typing" *ngIf="typingMessage | async as tmsg"> {{tmsg}} </div>
   </div>
     <div class="form-group row sticky-div text-area p-3">
-        <textarea class="form-control message-text-box ml-4" placeholder="Your Message.." rows="2" [formControl]="message" (keydown.enter)="sendMessage(user);false"></textarea>
+        <textarea matInput class="form-control message-text-box ml-4" placeholder="Your Message.." [matAutocomplete]="auto" rows="2" [formControl]="message" (keydown.enter)="sendMessage(user);false"></textarea>
         <button class="mt-4" mat-icon-button mat-type="button" (click)="sendMessage(user)" [disabled]="!message.valid" matTooltip="Send">
             <mat-icon class="mat-icon-rtl-mirror">send</mat-icon>
         </button>
+        <!-- <mat-autocomplete #auto="matAutocomplete" disableRipple>
+          <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+            {{tag}}
+          </mat-option>
+        </mat-autocomplete> -->
     </div>
 </div>

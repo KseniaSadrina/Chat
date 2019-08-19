@@ -8,7 +8,7 @@ export class Message {
     text: string;
     sessionName: string;
     timestamp: Date;
-    ChatSessionId: number;
+    chatSessionId: number;
 
     public constructor(init?: Partial<Message >) {
         Object.assign(this, init);

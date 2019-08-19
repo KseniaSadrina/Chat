@@ -3,7 +3,9 @@ import { MatButtonModule,
    MatIconModule,
    MatTooltipModule,
    MatSelectModule,
-   MatProgressBarModule } from '@angular/material';
+   MatProgressBarModule,
+   MatAutocompleteModule,
+   MatBadgeModule} from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import { MatListModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
@@ -25,7 +27,8 @@ import { NgModule } from '@angular/core';
     MatIconModule,
     MatTooltipModule,
     MatSelectModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatBadgeModule
 ],
   exports: [
     MatInputModule,
@@ -40,7 +43,8 @@ import { NgModule } from '@angular/core';
     MatIconModule,
     MatTooltipModule,
     MatSelectModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatBadgeModule
 ],
 })
 export class CustomMaterialModule { }

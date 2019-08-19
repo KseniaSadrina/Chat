@@ -11,8 +11,8 @@
       <li *ngFor="let training of trainings | async; let i = index">
         <a [routerLink]="[i]" routerLinkActive="active" class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between mb-2">
-            <h5 class="mb-1">{{ training.name }}</h5>
-            <!-- <span class="badge badge-danger badge-pill pt-2" title="Unread Messages">{{ (user | async)?.unreadMessages[training.name] }}</span> -->
+            <h5 class="mb-1" >{{ training.name }}</h5>
+            <span class="mt-1" *ngIf="(unreadMessages| async) as msgs" [hidden]="msgs[training?.id] === 0" [matBadge]="msgs[training?.id]" matBadgeColor="warn"></span>
           </div>
           <p>{{training.scenario.description}}</p>
           <small>{{training.scenario.name}}</small>

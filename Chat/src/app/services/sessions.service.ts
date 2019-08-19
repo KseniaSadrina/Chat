@@ -7,6 +7,7 @@ import { ChatSession } from '../models/chat-session';
 import { combineLatest } from 'rxjs/operators';
 import { TrainingsService } from './trainings.service';
 import { CustomAuthService } from './custom-auth.service';
+import { Session } from 'protractor';
 
 
 @Injectable({
@@ -25,6 +26,9 @@ export class SessionsService extends ServiceBase {
 
   private currentTyper = new BehaviorSubject<string>(null);
   public currentTypes$ = this.currentTyper.asObservable();
+
+  private unreadMessages = new BehaviorSubject< {[trainingId: number]: number}>({});
+  public unreadMessages$ = this.unreadMessages.asObservable();
 
   constructor(private httpService: HttpClient,
               private trainings: TrainingsService,
@@ -55,7 +59,7 @@ export class SessionsService extends ServiceBase {
     if (this.hubConnection) {
       const session = this.currentSession.getValue();
       message.sessionName = session.name;
-      message.ChatSessionId = session.id;
+      message.chatSessionId = session.id;
       this.hubConnection.invoke('SendToAll', message);
     }
   }
@@ -93,11 +97,7 @@ export class SessionsService extends ServiceBase {
         // Get all the session to which the new message belongs
         const sessions = this.sessions.getValue();
         const sessionIndx = sessions.findIndex(s => s.name === message.sessionName);
-        // Get the current session
-        const currentSession = this.currentSession.getValue();
-        // in case the sender is not me and this is not an open session, update the number of unread messages
-        // TBD
-        // Update the messages of the current session
+        this.handleNewMessage(message);
         if (!sessions[sessionIndx].messages) { sessions[sessionIndx].messages = []; }
         sessions[sessionIndx].messages.push(message);
         this.sessions.next(sessions);
@@ -165,7 +165,13 @@ export class SessionsService extends ServiceBase {
       })
     ).subscribe();
 
+    const currentSessionSub = this.currentSession.subscribe( res => {
+      if (!res) { return; }
+      this.removeAllUnreadMessages(res.trainingId);
+    });
+
     this.subscriptions.push(sub);
+    this.subscriptions.push(currentSessionSub);
   }
 
   protected deActivateService() {
@@ -173,5 +179,28 @@ export class SessionsService extends ServiceBase {
     if (this.sessions) { this.sessions.next([]); }
     if (this.currentSession) { this.currentSession.next(null); }
   }
+
+  // unread messages
+
+  handleNewMessage(message: Message) {
+    // in case the sender is not me and this is not an open session, update the number of unread messages
+   const currentSession = this.currentSession.getValue();
+   if (currentSession.name === message.sessionName ||
+     message.sender === this.authService.currentUserValue.userName) { return; }
+   const val = this.unreadMessages.getValue();
+   const session = this.sessions.getValue().find(item => item.id === message.chatSessionId);
+   if (!session) { return; }
+   const currentValue = val[session.trainingId];
+   if (!currentValue) { val[session.trainingId] = 1; } else {   val[session.trainingId] = currentValue + 1; }
+
+   this.unreadMessages.next(val);
+ }
+
+  removeAllUnreadMessages(trainingId: number) {
+    // in case the sender is not me and this is not an open session, update the number of unread messages
+   const val = this.unreadMessages.getValue();
+   val[trainingId] = 0;
+   this.unreadMessages.next(val);
+ }
 
 }

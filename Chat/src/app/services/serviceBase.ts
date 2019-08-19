@@ -1,15 +1,15 @@
-import { HubConnection } from "@aspnet/signalr";
-import * as signalR from "@aspnet/signalr";
-import { Observable, BehaviorSubject, Subscription, Subject } from "rxjs";
-import { User } from "../models/User";
-import { CustomAuthService } from "./custom-auth.service";
-import { map } from "rxjs/operators";
+import { HubConnection } from '@aspnet/signalr';
+import * as signalR from '@aspnet/signalr';
+import { Observable, BehaviorSubject, Subscription, Subject } from 'rxjs';
+import { User } from '../models/User';
+import { CustomAuthService } from './custom-auth.service';
+import { map } from 'rxjs/operators';
 
 export abstract class ServiceBase {
   protected hubConnection: HubConnection | undefined;
 
   private fullURL: string;
-  private hubURL = "http://localhost:5000";
+  private hubURL = 'http://localhost:5000';
   protected currentUser: Observable<User>;
 
   protected isHubActive = new BehaviorSubject<boolean>(false);
@@ -28,8 +28,7 @@ export abstract class ServiceBase {
   }
 
   private onHubActiveChanged(isActive: boolean) {
-    if (isActive) { this.activateService(); }
-    else { this.deActivateService(); }
+    if (isActive) { this.activateService(); } else { this.deActivateService(); }
   }
 
   protected abstract activateService();
@@ -38,8 +37,7 @@ export abstract class ServiceBase {
     if (this.subscriptions) {
       this.subscriptions.forEach(sub => sub.unsubscribe());
       this.subscriptions = new Array();
-    };
-
+    }
   }
 
   /// This method decides what to do with the hub connection every time the user logs in and out.
@@ -53,7 +51,7 @@ export abstract class ServiceBase {
     } else if (user && !isActive) {
       this.initHub(user.accessToken);
     } else {
-      console.log("user is changed while the hub was already activated?");
+      console.log('user is changed while the hub was already activated?');
       console.log(user);
     }
 
